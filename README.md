@@ -9,6 +9,7 @@ Download the repository code and build project in Android Studio by pressing pla
 ## Screenshots of application
 <img width="350" height="750" alt="FavoriteSongsPage" src="https://github.com/aj-govil/AppDevII-FocusApp/assets/98484980/36ab0045-4ff9-4a4b-9f6c-d91dfdad3442">
 <img width="350" height="750" alt="EpisodesPage" src="https://github.com/aj-govil/AppDevII-FocusApp/assets/98484699/446bd9a2-ea9a-4d2f-a02b-fcd17da79c92">
+<img width="190" alt="Screenshot 2023-10-06 at 2 43 34 PM" src="https://github.com/aj-govil/AppDevII-FocusApp/assets/81843229/a075241f-f687-49b0-9aac-bb4ab661bf77">
 
 ## Team members
 <p> Ajesh Govil: <i>2153240@johnabbottcollege.net</i> </p>
