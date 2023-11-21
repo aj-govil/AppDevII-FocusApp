@@ -32,6 +32,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.compose.rememberNavController
 import com.example.ajeshgovil_assignment2.ui.theme.AjeshGovil_Assignment2Theme
 
 /**
@@ -54,6 +55,15 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+/**
+ * Navigation inspired by the Navigation codelab
+ * https://developer.android.com/codelabs/jetpack-compose-navigation
+ */
+@Composable
+fun FocusApp() {
+    val navController = rememberNavController()
+
+}
 /**
  * Contains a favorite song input form along with a list of songs the user has entered.
  */
