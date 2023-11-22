@@ -37,6 +37,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.compose.NavHost
@@ -58,7 +59,8 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.inversePrimary
                 ) {
-                    SongListApp(viewModel)
+                    // SongListApp(viewModel)
+                    FocusApp()
                 }
             }
         }
@@ -70,14 +72,19 @@ class MainActivity : ComponentActivity() {
  * https://developer.android.com/codelabs/jetpack-compose-navigation
  */
 //@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@Preview
 @Composable
 fun FocusApp() {
+
     var currentScreen: FocusDestination by remember { mutableStateOf(Tasks) }
     val navController = rememberNavController()
 
     Scaffold (
-        bottomBar = {
-
+        topBar = {
+                FocusTabRow(allScreens = focusTabRowScreens,
+                    onTabSelected = { screen -> currentScreen = screen } ,
+                    currentScreen = currentScreen
+                )
         }
     )
     { innerPadding ->
@@ -87,112 +94,19 @@ fun FocusApp() {
             startDestination = Tasks.route,
             Modifier.padding(innerPadding)
         ) {
+
+            // Using destination classes to define route and screen
             // See destinations for which screen is passed in
+            composable(route = Stats.route){
+                Stats.screen()
+            }
             composable(route = Tasks.route) {
-                Tasks.screen()
+               Tasks.screen() // note not saving with rotation
+            }
+
+            composable(route = Generators.route){
+                Generators.screen()
             }
         }
-    }
-}
-/**
- * Contains a favorite song input form along with a list of songs the user has entered.
- */
-@Composable
-fun SongListApp(viewModel: SongListViewModel) {
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        //Header Banner
-        Row {
-            Text(
-                text = "MY FAVORITE SONGS",
-                style = MaterialTheme.typography.headlineMedium,
-                color = Color.Blue,
-                modifier = Modifier.padding(8.dp)
-            )
-            Icon(
-                imageVector = Icons.Default.List,
-                contentDescription = null,
-                tint = Color.Blue,
-                modifier = Modifier.size(50.dp)
-            )
-        }
-
-        // Text fields for song title and author
-        TextField(
-            value = viewModel.title.value,
-            onValueChange = { viewModel.title.value = it },
-            placeholder = { Text("Song Title") },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(5.dp)
-        )
-
-        TextField(
-            value = viewModel.author.value,
-            onValueChange = { viewModel.author.value = it },
-            placeholder = { Text("Author") },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(5.dp)
-        )
-
-        // Button to add a song
-        Button(
-            onClick = {
-                val newTitle = viewModel.title.value.text
-                val newAuthor = viewModel.author.value.text
-                if (newTitle.isNotBlank() && newAuthor.isNotBlank()) {
-                    viewModel.songList.add(newTitle to newAuthor)
-                    viewModel.title.value = TextFieldValue("")
-                    viewModel.author.value = TextFieldValue("")
-                }
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp)
-        ) {
-            Text("Add Song")
-        }
-
-        Spacer(modifier = Modifier.height(5.dp))
-
-        // Displays the song list from the ViewModel
-        LazyColumn {
-            items(viewModel.songList) { song ->
-                SongItem(song)
-            }
-        }
-    }
-}
-
-/**
- * A song that the user has entered. Part of a list of favorite songs.
- */
-@Composable
-fun SongItem(song: Pair<String, String>) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        //An icon to display next to the song name
-        Icon(
-            imageVector = Icons.Default.Favorite,
-            contentDescription = null,
-            tint = Color.Red,
-            modifier = Modifier.size(24.dp)
-        )
-
-        //The favorite song to display
-        Text(
-            text = "${song.first} by ${song.second}",
-            style = MaterialTheme.typography.bodyLarge,
-            modifier = Modifier.padding(start = 8.dp)
-        )
     }
 }
