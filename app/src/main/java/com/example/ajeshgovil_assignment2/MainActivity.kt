@@ -40,6 +40,8 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -76,13 +78,18 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun FocusApp() {
 
-    var currentScreen: FocusDestination by remember { mutableStateOf(Tasks) }
     val navController = rememberNavController()
+
+    val currentBackStack by navController.currentBackStackEntryAsState()
+    val currentDestination = currentBackStack?.destination
+
+    // Find last screen, if not default to Tasks Screen (Song list app at the moment)
+    var currentScreen = focusTabRowScreens.find { it.route == currentDestination?.route} ?: Tasks
 
     Scaffold (
         topBar = {
                 FocusTabRow(allScreens = focusTabRowScreens,
-                    onTabSelected = { newScreen -> navController.navigate(newScreen.route)} ,
+                    onTabSelected = { newScreen -> navController.navigateSingleTopTo(newScreen.route)} ,
                     currentScreen = currentScreen
                 )
         }
@@ -110,3 +117,15 @@ fun FocusApp() {
         }
     }
 }
+
+fun NavHostController.navigateSingleTopTo(route: String) =
+    this.navigate(route) {
+        popUpTo(
+            this@navigateSingleTopTo.graph.findStartDestination().id
+        ) {
+            saveState = true
+        }
+        launchSingleTop = true
+        restoreState = true
+    }
+
