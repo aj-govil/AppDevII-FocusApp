@@ -40,6 +40,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -62,7 +63,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.inversePrimary
                 ) {
                     // SongListApp(viewModel)
-                    FocusApp()
+                    FocusApp(viewModel)
                 }
             }
         }
@@ -74,9 +75,8 @@ class MainActivity : ComponentActivity() {
  * https://developer.android.com/codelabs/jetpack-compose-navigation
  */
 //@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@Preview
 @Composable
-fun FocusApp() {
+fun FocusApp(viewModel: SongListViewModel) {
 
     val navController = rememberNavController()
 
@@ -105,14 +105,14 @@ fun FocusApp() {
             // Using destination classes to define route and screen
             // See destinations for which screen is passed in
             composable(route = Stats.route){
-                Stats.screen()
+                StatsScreen()
             }
             composable(route = Tasks.route) {
-               Tasks.screen() // note not saving with rotation
+               SongListApp(viewModel = viewModel)
             }
 
             composable(route = Generators.route){
-                Generators.screen()
+                TaskGeneratorScreen()
             }
         }
     }
