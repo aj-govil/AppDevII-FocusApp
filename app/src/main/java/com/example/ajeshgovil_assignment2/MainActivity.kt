@@ -82,7 +82,7 @@ fun FocusApp() {
     Scaffold (
         topBar = {
                 FocusTabRow(allScreens = focusTabRowScreens,
-                    onTabSelected = { screen -> currentScreen = screen } ,
+                    onTabSelected = { newScreen -> navController.navigate(newScreen.route)} ,
                     currentScreen = currentScreen
                 )
         }
