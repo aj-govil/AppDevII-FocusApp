@@ -24,8 +24,12 @@ object Tasks: FocusDestination {
     override val screen: @Composable () -> Unit = { SongListApp(SongListViewModel()) }
 }
 
-object Generator: FocusDestination {
+object Generators: FocusDestination {
     override val route = "generator"
     override val screen: @Composable () -> Unit = { TaskGenerator() }
 
 }
+
+
+// Screens to be displayed in the top RallyTabRow
+val focusTabRowScreens = listOf(Tasks, Stats, Generators)
