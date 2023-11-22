@@ -1,4 +1,4 @@
-package com.example.ajeshgovil_assignment2
+package com.example.FocusApp
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row

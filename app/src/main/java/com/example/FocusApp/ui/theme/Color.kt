@@ -1,4 +1,4 @@
-package com.example.ajeshgovil_assignment2.ui.theme
+package com.example.FocusApp.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.ajeshgovil_assignment2"
+    namespace = "com.example.FocusApp"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.ajeshgovil_assignment2"
+        applicationId = "com.example.FocusApp"
         minSdk = 24
         targetSdk = 34
         versionCode = 1

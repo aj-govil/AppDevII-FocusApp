@@ -1,4 +1,4 @@
-package com.example.ajeshgovil_assignment2
+package com.example.FocusApp
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size

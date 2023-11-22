@@ -1,7 +1,4 @@
-package com.example.ajeshgovil_assignment2
-
-import androidx.compose.foundation.interaction.FocusInteraction
-import androidx.compose.runtime.Composable
+package com.example.FocusApp
 
 interface FocusDestination {
     val route: String

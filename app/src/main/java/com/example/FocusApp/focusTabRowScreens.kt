@@ -1,7 +1,5 @@
-package com.example.ajeshgovil_assignment2
+package com.example.FocusApp
 
-import android.graphics.drawable.Icon
-import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer

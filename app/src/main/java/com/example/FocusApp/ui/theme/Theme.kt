@@ -1,4 +1,4 @@
-package com.example.ajeshgovil_assignment2.ui.theme
+package com.example.FocusApp.ui.theme
 
 import android.app.Activity
 import android.os.Build
@@ -38,7 +38,7 @@ private val LightColorScheme = lightColorScheme(
 )
 
 @Composable
-fun AjeshGovil_Assignment2Theme(
+fun FocusAppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,

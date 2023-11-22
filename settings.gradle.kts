@@ -13,6 +13,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "AjeshGovil_Assignment2"
+rootProject.name = "FocusApp"
 include(":app")
  
