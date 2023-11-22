@@ -25,12 +25,14 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import java.util.Locale
 
+// Main row containing different tabs for user to switch between
 @Composable
 fun FocusTabRow(
     allScreens: List<FocusDestination>,
     onTabSelected: (FocusDestination) -> Unit,
     currentScreen: FocusDestination
 ){
+    // This was used as a setup from the Bank Application team
     Surface (
         Modifier.fillMaxWidth().height(64.dp)
         ){
@@ -50,6 +52,8 @@ fun FocusTabRow(
 // Initial setup for this FocusTab was copied from
 // The Bank Application project by Jeff, Josh and Caden
 // see @https://github.com/AppDevOrganization/5A6-group-project
+
+// Individual tabs use can click on
 @Composable
 private fun FocusTab(
     text: String,

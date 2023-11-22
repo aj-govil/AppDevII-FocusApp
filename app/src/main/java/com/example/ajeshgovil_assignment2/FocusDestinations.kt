@@ -16,7 +16,6 @@ object Stats: FocusDestination {
     override val route = "stats"
 }
 
-// TODO: ViewModel, not sure if what I wrote works as intended, also name change
 object Tasks: FocusDestination {
     override val route = "tasks"
 }

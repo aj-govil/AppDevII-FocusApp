@@ -8,6 +8,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
+/**
+ * Screen used to display statistics gathered from previous tasks
+ */
 @Composable
 fun StatsScreen(): Unit {
     Text(

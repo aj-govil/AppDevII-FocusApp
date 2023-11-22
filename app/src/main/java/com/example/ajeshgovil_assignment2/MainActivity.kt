@@ -78,6 +78,8 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun FocusApp(viewModel: SongListViewModel) {
 
+    // Navigation Setup
+    // ----------------
     val navController = rememberNavController()
 
     val currentBackStack by navController.currentBackStackEntryAsState()
@@ -86,6 +88,8 @@ fun FocusApp(viewModel: SongListViewModel) {
     // Find last screen, if not default to Tasks Screen (Song list app at the moment)
     var currentScreen = focusTabRowScreens.find { it.route == currentDestination?.route} ?: Tasks
 
+    // Application Setup
+    // ------------------
     Scaffold (
         topBar = {
                 FocusTabRow(allScreens = focusTabRowScreens,
@@ -95,7 +99,8 @@ fun FocusApp(viewModel: SongListViewModel) {
         }
     )
     { innerPadding ->
-        // Navigation controlled through here
+
+        // Navigation controlled through NavHost
         NavHost(
             navController = navController,
             startDestination = Tasks.route,
@@ -118,6 +123,13 @@ fun FocusApp(viewModel: SongListViewModel) {
     }
 }
 
+
+
+/** Extension method
+ * prevents reloading of a tab that is already open
+ * restores state if needed
+ * allows to pop back to start destination if configured
+ */
 fun NavHostController.navigateSingleTopTo(route: String) =
     this.navigate(route) {
         popUpTo(
