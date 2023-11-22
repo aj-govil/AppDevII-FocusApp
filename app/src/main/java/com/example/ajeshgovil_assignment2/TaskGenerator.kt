@@ -13,7 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun TaskGenerator(){
+fun TaskGeneratorScreen(){
     Text(
         text = "MY FAVORITE TASKS CREATOR GENERATOOOOOOR",
         style = MaterialTheme.typography.headlineMedium,
