@@ -20,6 +20,8 @@ import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -43,6 +45,9 @@ import com.example.FocusApp.ui.theme.Task
 import com.example.FocusApp.ui.theme.TaskListViewModel
 import java.util.Date
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.semantics.Role.Companion.Checkbox
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import java.sql.Time
@@ -58,7 +63,6 @@ import java.util.Calendar
 fun SongListApp(viewModel: TaskListViewModel) {
 
     var expanded by rememberSaveable { mutableStateOf(false) }
-    var userInput by rememberSaveable { mutableStateOf("") }
 
     Column(
         modifier = Modifier
@@ -111,7 +115,7 @@ fun SongListApp(viewModel: TaskListViewModel) {
                 .fillMaxWidth()
                 .height(120.dp)
                 .padding(5.dp)
-                .padding(top = 1.dp, bottom = 8.dp)
+                .padding(top = 1.dp, bottom = 2.dp)
                 .padding(8.dp),
             colors = TextFieldDefaults.textFieldColors(
                 focusedIndicatorColor = Color.Transparent,
@@ -119,10 +123,11 @@ fun SongListApp(viewModel: TaskListViewModel) {
             )
         )
 
+        // Text Field for time: Will be changed to using a TimePickerDialog in the future
         TextField(
-            value = userInput,
-            onValueChange = { userInput = it },
-            placeholder = { Text("Enter Time (hh:mm)") },
+            value = viewModel.dueTime.value,
+            onValueChange = { viewModel.dueTime.value = it },
+            placeholder = { Text("Time (hh:mm)") },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(5.dp)
@@ -143,20 +148,25 @@ fun SongListApp(viewModel: TaskListViewModel) {
             onClick = {
                 val newTitle = viewModel.title.value.text
                 val newDescription = viewModel.description.value.text
-                val newTime = viewModel.dueTime.value
-                if (newTitle.isNotBlank() && newDescription.isNotBlank()) {
+                val newTime = viewModel.dueTime.value.text
+                if (newTitle.isNotBlank() && newDescription.isNotBlank() && isValidTime(newTime)) {
                     viewModel.taskList.add(Task(newTitle, newDescription, newTime, false))
                     viewModel.title.value = TextFieldValue("")
                     viewModel.description.value = TextFieldValue("")
-                    viewModel.dueTime.value = Date()
+                    viewModel.dueTime.value = TextFieldValue("")
                 }
             },
+            enabled = viewModel.title.value.text.isNotBlank() && viewModel.description.value.text.isNotBlank() && viewModel.dueTime.value.text.isNotBlank(),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp)
+                .background(MaterialTheme.colorScheme.primary, shape = RoundedCornerShape(20.dp))
         ) {
-            Text("Add Task")
+            Text("Add Task", color = Color.White)
         }
+
+
+
 
         Spacer(modifier = Modifier.height(5.dp))
 
@@ -168,6 +178,7 @@ fun SongListApp(viewModel: TaskListViewModel) {
                     TaskItem(task)
                 }
             }
+
         }
         Row(
             modifier = Modifier
@@ -301,54 +312,54 @@ fun SongListApp(viewModel: TaskListViewModel) {
 }
 
 /**
- * A song that the user has entered. Part of a list of favorite songs.
+ * A task that the user has entered.
  */
 @Composable
 fun TaskItem(task: Task) {
-    Column(
+    Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
+            .clip(RoundedCornerShape(8.dp))
     ) {
-        Text(
-            text = task.title,
-            style = MaterialTheme.typography.titleSmall,
-            color = Color.Black
-        )
-        Text(
-            text = task.description,
-            style = MaterialTheme.typography.bodyMedium,
-            color = Color.Gray,
-            modifier = Modifier.padding(vertical = 4.dp)
-        )
-        Text(
-            text = "Due: ${task.dueTime}",
-            style = MaterialTheme.typography.bodyMedium,
-            color = Color.Gray
-        )
-    }
-}
+        Column(
+            modifier = Modifier
+                .padding(16.dp)
+        ) {
+            Text(
+                text = task.title,
+                style = MaterialTheme.typography.headlineMedium,
+                color = Color.Black
+            )
+            Text(
+                text = task.description,
+                style = MaterialTheme.typography.bodyLarge,
+                color = Color.Gray,
+                modifier = Modifier.padding(vertical = 4.dp)
+            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(vertical = 4.dp)
+            ) {
 
-fun parseTimeString(timeString: String): Time {
-    val parts = timeString.split(":")
-    if (parts.size == 2) {
-        try {
-            val hour = parts[0].toInt()
-            val minute = parts[1].toInt()
-
-            // Ensure the hour and minute values are within a valid range
-            if (hour in 0..23 && minute in 0..59) {
-                return Time(hour, minute, 0)
+                Text(
+                    text = "Due: ${task.dueTime}",
+                    style = MaterialTheme.typography.bodyLarge.copy(fontStyle = FontStyle.Italic),
+                    color = Color.Gray
+                )
             }
-        } catch (e: NumberFormatException) {
-            // Ignore parsing errors, return default value
         }
     }
-
-    // Default to current time if the input is not in the expected format
-    val currentTime = Calendar.getInstance()
-    return Time(currentTime.get(Calendar.HOUR_OF_DAY), currentTime.get(Calendar.MINUTE), 0)
 }
+
+fun isValidTime(time: String): Boolean {
+    val regex = Regex("^([01]?[0-9]|2[0-3]):[0-5][0-9]\$")
+    return regex.matches(time)
+}
+
+
+
+
 
 
 

@@ -10,17 +10,17 @@ import java.util.Date
 
 
 data class Task(
-    val title: String,
-    val description: String,
-    val dueTime: Date,
-    val isComplete: Boolean
+    var title: String,
+    var description: String,
+    var dueTime: String,
+    var isComplete: Boolean
 )
 
 class TaskListViewModel : ViewModel() {
     // Data Fields for a Task
     val title = mutableStateOf(TextFieldValue())
     val description = mutableStateOf(TextFieldValue())
-    val dueTime = mutableStateOf(Date())
+    val dueTime = mutableStateOf(TextFieldValue())
     val isComplete = mutableStateOf(false)
     val taskList = mutableStateListOf<Task>()
 
@@ -29,4 +29,6 @@ class TaskListViewModel : ViewModel() {
     val lastName = mutableStateOf(TextFieldValue())
     var age = mutableStateOf(TextFieldValue())
     val email = mutableStateOf(TextFieldValue())
+
+
 }
