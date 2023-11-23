@@ -41,8 +41,9 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.inversePrimary
                 ) {
                     // SongListApp(viewModel)
-                    // Display landing screen or Focus App
+                    // Display landing screen then focus app
                     var showLandingScreen by remember { mutableStateOf(true) }
+
                     if(showLandingScreen){
                         LandingScreen(onTimeout = { showLandingScreen = false})
                     }

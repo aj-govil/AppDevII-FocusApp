@@ -33,6 +33,8 @@ fun LandingScreen(onTimeout: () -> Unit, modifier: Modifier = Modifier) {
             delay(SplashWaitTime)
             currentOnTimeout()
         }
+        // Coroutine scopes can be added to fetch data if needed
+
         // Content to be displayed in the middle of the screen
         // Dev Note: This can be changed to an icon or custom logo of our choosing
         // Image(painterResource(id = R.drawable.ic_crane_drawer), contentDescription = null)
