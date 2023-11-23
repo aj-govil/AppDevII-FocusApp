@@ -10,15 +10,18 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -30,12 +33,26 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.em
+import com.example.FocusApp.ui.theme.Task
+import com.example.FocusApp.ui.theme.TaskListViewModel
+import java.util.Date
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.semantics.Role.Companion.Checkbox
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import java.sql.Time
+import java.util.Calendar
+
 
 /**
  * Contains a favorite song input form along with a list of songs the user has entered.
@@ -43,7 +60,7 @@ import androidx.compose.ui.unit.dp
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SongListApp(viewModel: SongListViewModel) {
+fun SongListApp(viewModel: TaskListViewModel) {
 
     var expanded by rememberSaveable { mutableStateOf(false) }
 
@@ -55,55 +72,101 @@ fun SongListApp(viewModel: SongListViewModel) {
         //Header Banner
         Row {
             Text(
-                text = "MY FAVORITE SONGS",
-                style = MaterialTheme.typography.headlineMedium,
-                color = Color.Blue,
-                modifier = Modifier.padding(8.dp)
+                text = "MY TASKS",
+                style = MaterialTheme.typography.titleLarge.copy(
+                    fontWeight = FontWeight.Bold,
+                    letterSpacing = 0.1.em,
+                    color = Color.Blue,
+                    fontFamily = FontFamily.Serif
+                ),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(
+                        color = Color.Gray.copy(alpha = 0.1f),
+                        shape = RoundedCornerShape(8.dp)
+                    )
+                    .padding(8.dp)
+                    .wrapContentWidth(Alignment.CenterHorizontally)
             )
-            Icon(
-                imageVector = Icons.Default.List,
-                contentDescription = null,
-                tint = Color.Blue,
-                modifier = Modifier.size(50.dp)
-            )
+
         }
 
-        // Text fields for song title and author
+        // Text field for task title
         TextField(
             value = viewModel.title.value,
             onValueChange = { viewModel.title.value = it },
-            placeholder = { Text("Song Title") },
+            placeholder = { Text("Title") },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(5.dp)
+                .padding(8.dp),
+            colors = TextFieldDefaults.textFieldColors(
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent
+            )
         )
 
+        // Text field for task description
         TextField(
-            value = viewModel.author.value,
-            onValueChange = { viewModel.author.value = it },
-            placeholder = { Text("Author") },
+            value = viewModel.description.value,
+            onValueChange = { viewModel.description.value = it },
+            placeholder = { Text("Description") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(120.dp)
+                .padding(5.dp)
+                .padding(top = 1.dp, bottom = 2.dp)
+                .padding(8.dp),
+            colors = TextFieldDefaults.textFieldColors(
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent
+            )
+        )
+
+        // Text Field for time: Will be changed to using a TimePickerDialog in the future
+        TextField(
+            value = viewModel.dueTime.value,
+            onValueChange = { viewModel.dueTime.value = it },
+            placeholder = { Text("Time (hh:mm)") },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(5.dp)
+                .padding(8.dp),
+            colors = TextFieldDefaults.textFieldColors(
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent
+            ),
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Number,
+                imeAction = ImeAction.Done
+            )
         )
 
-        // Button to add a song
+
+        // Button to add a task
         Button(
             onClick = {
                 val newTitle = viewModel.title.value.text
-                val newAuthor = viewModel.author.value.text
-                if (newTitle.isNotBlank() && newAuthor.isNotBlank()) {
-                    viewModel.songList.add(newTitle to newAuthor)
+                val newDescription = viewModel.description.value.text
+                val newTime = viewModel.dueTime.value.text
+                if (newTitle.isNotBlank() && newDescription.isNotBlank() && isValidTime(newTime)) {
+                    viewModel.taskList.add(Task(newTitle, newDescription, newTime, false))
                     viewModel.title.value = TextFieldValue("")
-                    viewModel.author.value = TextFieldValue("")
+                    viewModel.description.value = TextFieldValue("")
+                    viewModel.dueTime.value = TextFieldValue("")
                 }
             },
+            enabled = viewModel.title.value.text.isNotBlank() && viewModel.description.value.text.isNotBlank() && viewModel.dueTime.value.text.isNotBlank(),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp)
+                .background(MaterialTheme.colorScheme.primary, shape = RoundedCornerShape(20.dp))
         ) {
-            Text("Add Song")
+            Text("Add Task", color = Color.White)
         }
+
+
+
 
         Spacer(modifier = Modifier.height(5.dp))
 
@@ -111,10 +174,11 @@ fun SongListApp(viewModel: SongListViewModel) {
             modifier = Modifier.weight(1f)
         ) {
             LazyColumn {
-                items(viewModel.songList) { song ->
-                    SongItem(song)
+                items(viewModel.taskList) { task ->
+                    TaskItem(task)
                 }
             }
+
         }
         Row(
             modifier = Modifier
@@ -248,30 +312,55 @@ fun SongListApp(viewModel: SongListViewModel) {
 }
 
 /**
- * A song that the user has entered. Part of a list of favorite songs.
+ * A task that the user has entered.
  */
 @Composable
-fun SongItem(song: Pair<String, String>) {
-    Row(
+fun TaskItem(task: Task) {
+    Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp),
-        verticalAlignment = Alignment.CenterVertically,
+            .padding(8.dp)
+            .clip(RoundedCornerShape(8.dp))
     ) {
-        //An icon to display next to the song name
-        Icon(
-            imageVector = Icons.Default.Favorite,
-            contentDescription = null,
-            tint = Color.Red,
-            modifier = Modifier.size(24.dp)
-        )
+        Column(
+            modifier = Modifier
+                .padding(16.dp)
+        ) {
+            Text(
+                text = task.title,
+                style = MaterialTheme.typography.headlineMedium,
+                color = Color.Black
+            )
+            Text(
+                text = task.description,
+                style = MaterialTheme.typography.bodyLarge,
+                color = Color.Gray,
+                modifier = Modifier.padding(vertical = 4.dp)
+            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(vertical = 4.dp)
+            ) {
 
-        //The favorite song to display
-        Text(
-            text = "${song.first} by ${song.second}",
-            style = MaterialTheme.typography.bodyLarge,
-            modifier = Modifier.padding(start = 8.dp)
-        )
+                Text(
+                    text = "Due: ${task.dueTime}",
+                    style = MaterialTheme.typography.bodyLarge.copy(fontStyle = FontStyle.Italic),
+                    color = Color.Gray
+                )
+            }
+        }
     }
 }
+
+fun isValidTime(time: String): Boolean {
+    val regex = Regex("^([01]?[0-9]|2[0-3]):[0-5][0-9]\$")
+    return regex.matches(time)
+}
+
+
+
+
+
+
+
 

@@ -26,6 +26,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.FocusApp.ui.theme.FocusAppTheme
+import com.example.FocusApp.ui.theme.TaskListViewModel
 
 /**
  * Main Activity containing a favorite song list application.
@@ -33,7 +34,7 @@ import com.example.FocusApp.ui.theme.FocusAppTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val viewModel = ViewModelProvider(this).get(SongListViewModel::class.java)
+        val viewModel = ViewModelProvider(this).get(TaskListViewModel::class.java)
         setContent {
             FocusAppTheme {
                 Surface(
@@ -62,7 +63,7 @@ class MainActivity : ComponentActivity() {
  */
 //@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun FocusApp(viewModel: SongListViewModel) {
+fun FocusApp(viewModel: TaskListViewModel) {
 
     // Navigation Setup
     // ----------------
@@ -99,7 +100,7 @@ fun FocusApp(viewModel: SongListViewModel) {
 @Composable
 fun FocusNavHost(
     navController: NavHostController,
-    viewModel: SongListViewModel, // pass in viewmodel again
+    viewModel: TaskListViewModel, // pass in viewmodel again
     modifier: Modifier
 ){
     // Navigation controlled through NavHost
