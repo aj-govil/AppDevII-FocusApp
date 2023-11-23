@@ -50,6 +50,10 @@ android {
 }
 
 dependencies {
+    // Advanced state dependencies
+//    val lifecycle_version = "2.6.2"
+//    implementation("androidx.lifecycle:lifecycle-runtime-compose:$lifecycle_version")
+
     implementation("com.google.ar.sceneform:filament-android:1.17.1")
     val nav_version = "2.7.5"
 

@@ -13,8 +13,12 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -37,7 +41,15 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.inversePrimary
                 ) {
                     // SongListApp(viewModel)
-                    FocusApp(viewModel)
+                    // Display landing screen then focus app
+                    var showLandingScreen by remember { mutableStateOf(true) }
+
+                    if(showLandingScreen){
+                        LandingScreen(onTimeout = { showLandingScreen = false})
+                    }
+                    else {
+                        FocusApp(viewModel)
+                    }
                 }
             }
         }
@@ -73,30 +85,44 @@ fun FocusApp(viewModel: SongListViewModel) {
         }
     )
     { innerPadding ->
-
-        // Navigation controlled through NavHost
-        NavHost(
+        FocusNavHost(
             navController = navController,
-            startDestination = Tasks.route,
-            Modifier.padding(innerPadding)
-        ) {
-
-            // Using destination classes to define route and screen
-            // See destinations for which screen is passed in
-            composable(route = Stats.route){
-                StatsScreen()
-            }
-            composable(route = Tasks.route) {
-               SongListApp(viewModel = viewModel)
-            }
-
-            composable(route = Generators.route){
-                TaskGeneratorScreen()
-            }
-        }
+            viewModel = viewModel,
+            modifier = Modifier.padding(innerPadding)
+        )
     }
 }
 
+/**
+ * Extraction of the navhost logic into its own composable
+ */
+@Composable
+fun FocusNavHost(
+    navController: NavHostController,
+    viewModel: SongListViewModel, // pass in viewmodel again
+    modifier: Modifier
+){
+    // Navigation controlled through NavHost
+    NavHost(
+        navController = navController,
+        startDestination = Tasks.route,
+        modifier = modifier
+    ) {
+
+        // Using destination classes to define route and screen
+        // See destinations for which screen is passed in
+        composable(route = Stats.route){
+            StatsScreen()
+        }
+        composable(route = Tasks.route) {
+            SongListApp(viewModel = viewModel)
+        }
+
+        composable(route = Generators.route){
+            TaskGeneratorScreen()
+        }
+    }
+}
 
 
 /** Extension method
