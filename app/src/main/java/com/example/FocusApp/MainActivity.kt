@@ -13,6 +13,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
@@ -38,7 +41,14 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.inversePrimary
                 ) {
                     // SongListApp(viewModel)
-                    FocusApp(viewModel)
+                    // Display landing screen or Focus App
+                    var showLandingScreen by remember { mutableStateOf(true) }
+                    if(showLandingScreen){
+                        LandingScreen(onTimeout = { showLandingScreen = false})
+                    }
+                    else {
+                        FocusApp(viewModel)
+                    }
                 }
             }
         }
