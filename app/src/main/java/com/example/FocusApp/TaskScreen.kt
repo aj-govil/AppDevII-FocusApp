@@ -14,6 +14,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
@@ -106,12 +107,6 @@ fun SongListApp(viewModel: SongListViewModel) {
 
         Spacer(modifier = Modifier.height(5.dp))
 
-        // Displays the song list from the ViewModel
-        /*LazyColumn {
-            items(viewModel.songList) { song ->
-                SongItem(song)
-            }
-        }*/
         Box(
             modifier = Modifier.weight(1f)
         ) {
@@ -124,7 +119,6 @@ fun SongListApp(viewModel: SongListViewModel) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                /*.padding(8.dp)*/
         ) {
             Button(
                 onClick = { expanded = !expanded },
@@ -151,10 +145,20 @@ fun SongListApp(viewModel: SongListViewModel) {
                         .background(MaterialTheme.colorScheme.inverseOnSurface)
                         .padding(30.dp)
                 ) {
-                    Text(text = "Account Information",
-                        modifier = Modifier
-                            .padding(8.dp),
-                        style = MaterialTheme.typography.headlineMedium,)
+                    Row {
+                        Text(
+                            text = "Account Information",
+                            modifier = Modifier
+                                .padding(8.dp),
+                            style = MaterialTheme.typography.headlineMedium,
+                        )
+                        Icon(
+                            imageVector = Icons.Default.Info,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.inverseSurface,
+                            modifier = Modifier.size(50.dp)
+                        )
+                    }
 
                     Row{
                         Text(
@@ -232,7 +236,8 @@ fun SongListApp(viewModel: SongListViewModel) {
                         onClick = { expanded = false },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(25.dp)
+                            .padding(25.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.inverseSurface)
                     ) {
                         Text("Save and Close")
                     }
