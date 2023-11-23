@@ -14,5 +14,5 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "FocusApp"
-include(":app")
+include(":app", ":FocusApp")
  
