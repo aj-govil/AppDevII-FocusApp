@@ -1,4 +1,4 @@
-package com.example.FocusApp
+package com.example.FocusApp.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -21,7 +21,6 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -43,15 +42,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import com.example.FocusApp.ui.theme.Task
 import com.example.FocusApp.ui.theme.TaskListViewModel
-import java.util.Date
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.semantics.Role.Companion.Checkbox
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import java.sql.Time
-import java.util.Calendar
 
 
 /**

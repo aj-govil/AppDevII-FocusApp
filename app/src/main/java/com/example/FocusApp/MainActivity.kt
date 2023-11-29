@@ -18,13 +18,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.FocusApp.screens.LandingScreen
+import com.example.FocusApp.screens.SongListApp
+import com.example.FocusApp.screens.StatsScreen
+import com.example.FocusApp.screens.TaskGeneratorScreen
 import com.example.FocusApp.ui.theme.FocusAppTheme
 import com.example.FocusApp.ui.theme.TaskListViewModel
 
