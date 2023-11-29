@@ -47,6 +47,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import com.example.FocusApp.viewmodels.AccountInformationViewModel
 
 
 /**
@@ -55,7 +56,9 @@ import androidx.compose.ui.text.input.KeyboardType
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SongListApp(viewModel: TaskListViewModel) {
+fun SongListApp(
+    taskListViewModel: TaskListViewModel,
+    accountInformationViewModel: AccountInformationViewModel) {
 
     var expanded by rememberSaveable { mutableStateOf(false) }
 
@@ -88,8 +91,8 @@ fun SongListApp(viewModel: TaskListViewModel) {
 
         // Text field for task title
         TextField(
-            value = viewModel.title.value,
-            onValueChange = { viewModel.title.value = it },
+            value = taskListViewModel.title.value,
+            onValueChange = { taskListViewModel.title.value = it },
             placeholder = { Text("Title") },
             modifier = Modifier
                 .fillMaxWidth()
@@ -103,8 +106,8 @@ fun SongListApp(viewModel: TaskListViewModel) {
 
         // Text field for task description
         TextField(
-            value = viewModel.description.value,
-            onValueChange = { viewModel.description.value = it },
+            value = taskListViewModel.description.value,
+            onValueChange = { taskListViewModel.description.value = it },
             placeholder = { Text("Description") },
             modifier = Modifier
                 .fillMaxWidth()
@@ -120,8 +123,8 @@ fun SongListApp(viewModel: TaskListViewModel) {
 
         // Text Field for time: Will be changed to using a TimePickerDialog in the future
         TextField(
-            value = viewModel.dueTime.value,
-            onValueChange = { viewModel.dueTime.value = it },
+            value = taskListViewModel.dueTime.value,
+            onValueChange = { taskListViewModel.dueTime.value = it },
             placeholder = { Text("Time (hh:mm)") },
             modifier = Modifier
                 .fillMaxWidth()
@@ -141,17 +144,17 @@ fun SongListApp(viewModel: TaskListViewModel) {
         // Button to add a task
         Button(
             onClick = {
-                val newTitle = viewModel.title.value.text
-                val newDescription = viewModel.description.value.text
-                val newTime = viewModel.dueTime.value.text
+                val newTitle = taskListViewModel.title.value.text
+                val newDescription = taskListViewModel.description.value.text
+                val newTime = taskListViewModel.dueTime.value.text
                 if (newTitle.isNotBlank() && newDescription.isNotBlank() && isValidTime(newTime)) {
-                    viewModel.taskList.add(Task(newTitle, newDescription, newTime, false))
-                    viewModel.title.value = TextFieldValue("")
-                    viewModel.description.value = TextFieldValue("")
-                    viewModel.dueTime.value = TextFieldValue("")
+                    taskListViewModel.taskList.add(Task(newTitle, newDescription, newTime, false))
+                    taskListViewModel.title.value = TextFieldValue("")
+                    taskListViewModel.description.value = TextFieldValue("")
+                    taskListViewModel.dueTime.value = TextFieldValue("")
                 }
             },
-            enabled = viewModel.title.value.text.isNotBlank() && viewModel.description.value.text.isNotBlank() && viewModel.dueTime.value.text.isNotBlank(),
+            enabled = taskListViewModel.title.value.text.isNotBlank() && taskListViewModel.description.value.text.isNotBlank() && taskListViewModel.dueTime.value.text.isNotBlank(),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp)
@@ -169,7 +172,7 @@ fun SongListApp(viewModel: TaskListViewModel) {
             modifier = Modifier.weight(1f)
         ) {
             LazyColumn {
-                items(viewModel.taskList) { task ->
+                items(taskListViewModel.taskList) { task ->
                     TaskItem(task)
                 }
             }
@@ -228,8 +231,8 @@ fun SongListApp(viewModel: TaskListViewModel) {
                         )
 
                         TextField(
-                            value = viewModel.firstName.value,
-                            onValueChange = { viewModel.firstName.value = it },
+                            value = accountInformationViewModel.firstName.value,
+                            onValueChange = { accountInformationViewModel.firstName.value = it },
                             placeholder = { Text("Enter first name") },
                             modifier = Modifier
                                 .fillMaxWidth(0.8f)
@@ -246,8 +249,8 @@ fun SongListApp(viewModel: TaskListViewModel) {
                         )
 
                         TextField(
-                            value = viewModel.lastName.value,
-                            onValueChange = { viewModel.lastName.value = it },
+                            value = accountInformationViewModel.lastName.value,
+                            onValueChange = { accountInformationViewModel.lastName.value = it },
                             placeholder = { Text("Enter last name") },
                             modifier = Modifier
                                 .fillMaxWidth(0.8f)
@@ -264,8 +267,8 @@ fun SongListApp(viewModel: TaskListViewModel) {
                         )
 
                         TextField(
-                            value = viewModel.age.value,
-                            onValueChange = { viewModel.age.value = it },
+                            value = accountInformationViewModel.age.value,
+                            onValueChange = { accountInformationViewModel.age.value = it },
                             placeholder = { Text("Enter your age") },
                             modifier = Modifier
                                 .fillMaxWidth(0.8f)
@@ -282,8 +285,8 @@ fun SongListApp(viewModel: TaskListViewModel) {
                         )
 
                         TextField(
-                            value = viewModel.email.value,
-                            onValueChange = { viewModel.email.value = it },
+                            value = accountInformationViewModel.email.value,
+                            onValueChange = { accountInformationViewModel.email.value = it },
                             placeholder = { Text("Enter email address") },
                             modifier = Modifier
                                 .fillMaxWidth(0.8f)
