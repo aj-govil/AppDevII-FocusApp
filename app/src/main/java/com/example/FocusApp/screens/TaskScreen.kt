@@ -41,7 +41,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import com.example.FocusApp.data.Task
-import com.example.FocusApp.data.TaskListViewModel
+import com.example.FocusApp.viewmodels.TaskListViewModel
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontStyle
