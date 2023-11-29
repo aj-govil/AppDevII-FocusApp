@@ -29,7 +29,7 @@ import com.example.FocusApp.screens.SongListApp
 import com.example.FocusApp.screens.StatsScreen
 import com.example.FocusApp.screens.TaskGeneratorScreen
 import com.example.FocusApp.ui.theme.FocusAppTheme
-import com.example.FocusApp.data.TaskListViewModel
+import com.example.FocusApp.viewmodels.TaskListViewModel
 
 /**
  * Main Activity containing a favorite song list application.
