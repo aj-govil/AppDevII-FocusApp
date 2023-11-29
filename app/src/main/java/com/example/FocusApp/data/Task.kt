@@ -1,4 +1,4 @@
-package com.example.FocusApp.ui.theme
+package com.example.FocusApp.data
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
