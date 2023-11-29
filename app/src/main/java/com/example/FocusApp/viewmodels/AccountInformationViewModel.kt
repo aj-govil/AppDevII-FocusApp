@@ -8,8 +8,8 @@ import androidx.lifecycle.ViewModel
 class AccountInformationViewModel: ViewModel() {
 
     // Data Fields for a Account
-//    val firstName = mutableStateOf(TextFieldValue())
-//    val lastName = mutableStateOf(TextFieldValue())
-//    var age = mutableStateOf(TextFieldValue())
-//    val email = mutableStateOf(TextFieldValue())
+    val firstName = mutableStateOf(TextFieldValue())
+    val lastName = mutableStateOf(TextFieldValue())
+    var age = mutableStateOf(TextFieldValue())
+    val email = mutableStateOf(TextFieldValue())
 }
