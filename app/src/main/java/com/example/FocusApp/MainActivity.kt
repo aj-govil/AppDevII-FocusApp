@@ -29,6 +29,7 @@ import com.example.FocusApp.screens.SongListApp
 import com.example.FocusApp.screens.StatsScreen
 import com.example.FocusApp.screens.TaskGeneratorScreen
 import com.example.FocusApp.ui.theme.FocusAppTheme
+import com.example.FocusApp.viewmodels.AccountInformationViewModel
 import com.example.FocusApp.viewmodels.TaskListViewModel
 
 /**
@@ -37,7 +38,8 @@ import com.example.FocusApp.viewmodels.TaskListViewModel
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val viewModel = ViewModelProvider(this).get(TaskListViewModel::class.java)
+        val taskListViewModel = ViewModelProvider(this).get(TaskListViewModel::class.java)
+        val accountInformationViewModel = ViewModelProvider(this).get(AccountInformationViewModel::class.java)
         setContent {
             FocusAppTheme {
                 Surface(
@@ -52,7 +54,9 @@ class MainActivity : ComponentActivity() {
                         LandingScreen(onTimeout = { showLandingScreen = false})
                     }
                     else {
-                        FocusApp(viewModel)
+                        FocusApp(
+                            taskListViewModel,
+                            accountInformationViewModel)
                     }
                 }
             }
@@ -66,7 +70,11 @@ class MainActivity : ComponentActivity() {
  */
 //@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun FocusApp(viewModel: TaskListViewModel) {
+fun FocusApp(
+    taskListViewModel: TaskListViewModel = TaskListViewModel(),
+    accountInformationViewModel: AccountInformationViewModel = AccountInformationViewModel()
+
+    ) {
 
     // Navigation Setup
     // ----------------
@@ -91,7 +99,8 @@ fun FocusApp(viewModel: TaskListViewModel) {
     { innerPadding ->
         FocusNavHost(
             navController = navController,
-            viewModel = viewModel,
+            taskListViewModel = taskListViewModel,
+            accountInformationViewModel = accountInformationViewModel,
             modifier = Modifier.padding(innerPadding)
         )
     }
@@ -103,7 +112,8 @@ fun FocusApp(viewModel: TaskListViewModel) {
 @Composable
 fun FocusNavHost(
     navController: NavHostController,
-    viewModel: TaskListViewModel, // pass in viewmodel again
+    taskListViewModel: TaskListViewModel, // pass in viewmodel again
+    accountInformationViewModel: AccountInformationViewModel,
     modifier: Modifier
 ){
     // Navigation controlled through NavHost
@@ -119,7 +129,9 @@ fun FocusNavHost(
             StatsScreen()
         }
         composable(route = Tasks.route) {
-            SongListApp(viewModel = viewModel)
+            SongListApp(
+                taskListViewModel = taskListViewModel,
+                accountInformationViewModel = accountInformationViewModel)
         }
 
         composable(route = Generators.route){
