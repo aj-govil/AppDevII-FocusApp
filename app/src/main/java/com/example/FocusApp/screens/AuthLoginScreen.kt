@@ -77,7 +77,7 @@ fun AuthLoginScreen(
                 Button(onClick = {
                     authViewModel.signIn(email, password)
                     //TODO: Add Validation Checks
-                    if (!password.isNullOrBlank()){
+                    if (password.isNullOrBlank()){
                         navController.navigate("Tasks")
                     }
                 }) {
