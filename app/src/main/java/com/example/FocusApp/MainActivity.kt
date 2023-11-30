@@ -24,6 +24,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.FocusApp.screens.AuthLoginScreen
 import com.example.FocusApp.screens.LandingScreen
 import com.example.FocusApp.screens.SongListApp
 import com.example.FocusApp.screens.StatsScreen
@@ -31,6 +32,10 @@ import com.example.FocusApp.screens.TaskGeneratorScreen
 import com.example.FocusApp.ui.theme.FocusAppTheme
 import com.example.FocusApp.viewmodels.AccountInformationViewModel
 import com.example.FocusApp.viewmodels.TaskListViewModel
+import com.google.firebase.Firebase
+import com.google.firebase.FirebaseApp
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.auth
 
 /**
  * Main Activity containing a favorite song list application.
@@ -40,6 +45,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         val taskListViewModel = ViewModelProvider(this).get(TaskListViewModel::class.java)
         val accountInformationViewModel = ViewModelProvider(this).get(AccountInformationViewModel::class.java)
+//        lateinit var auth: FirebaseAuth
+//
+//        auth = Firebase.auth
+        FirebaseApp.initializeApp(this)
         setContent {
             FocusAppTheme {
                 Surface(
@@ -119,7 +128,7 @@ fun FocusNavHost(
     // Navigation controlled through NavHost
     NavHost(
         navController = navController,
-        startDestination = Tasks.route,
+        startDestination = Login.route,
         modifier = modifier
     ) {
 
@@ -136,6 +145,10 @@ fun FocusNavHost(
 
         composable(route = Generators.route){
             TaskGeneratorScreen()
+        }
+
+        composable(route = Login.route){
+            AuthLoginScreen()
         }
     }
 }
