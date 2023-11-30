@@ -6,12 +6,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.example.FocusApp.auth.AuthViewModel
 import com.example.FocusApp.auth.AuthViewModelFactory
 
 @Composable
-fun AuthLoginScreen(authViewModel: AuthViewModel =
-                        viewModel(factory= AuthViewModelFactory())
+fun AuthLoginScreen(
+    navController: NavController,
+    authViewModel: AuthViewModel = viewModel(factory= AuthViewModelFactory(),
+                        )
 ) {
     val userState = authViewModel.currentUser().collectAsState()
 
@@ -25,6 +29,7 @@ fun AuthLoginScreen(authViewModel: AuthViewModel =
             }
             Button(onClick = {
                 authViewModel.signIn("myname2@name.com", "Abcd1234!")
+                navController.navigate("Tasks")
             }) {
                 Text("Sign in via email")
             }
