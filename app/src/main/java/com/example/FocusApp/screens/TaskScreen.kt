@@ -1,6 +1,7 @@
 package com.example.FocusApp.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Box
@@ -16,6 +17,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
@@ -70,7 +72,7 @@ fun SongListApp(
         //Header Banner
         Row {
             Text(
-                text = "MY TASKS",
+                text = "CREATE TASK",
                 style = MaterialTheme.typography.titleLarge.copy(
                     fontWeight = FontWeight.Bold,
                     letterSpacing = 0.1.em,
@@ -320,32 +322,67 @@ fun TaskItem(task: Task) {
             .padding(8.dp)
             .clip(RoundedCornerShape(8.dp))
     ) {
-        Column(
+        Row(
             modifier = Modifier
+                .fillMaxWidth()
                 .padding(16.dp)
         ) {
-            Text(
-                text = task.title,
-                style = MaterialTheme.typography.headlineMedium,
-                color = Color.Black
-            )
-            Text(
-                text = task.description,
-                style = MaterialTheme.typography.bodyLarge,
-                color = Color.Gray,
-                modifier = Modifier.padding(vertical = 4.dp)
-            )
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(vertical = 4.dp)
+            // Task details column
+            Column(
+                modifier = Modifier
+                    .weight(1f) // Takes up most of the available space
             ) {
-
                 Text(
-                    text = "Due: ${task.dueTime}",
-                    style = MaterialTheme.typography.bodyLarge.copy(fontStyle = FontStyle.Italic),
-                    color = Color.Gray
+                    text = task.title,
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = Color.Black
                 )
+                Text(
+                    text = task.description,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = Color.Gray,
+                    modifier = Modifier.padding(vertical = 4.dp)
+                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(vertical = 4.dp)
+                ) {
+                    Text(
+                        text = "Due: ${task.dueTime}",
+                        style = MaterialTheme.typography.bodyLarge.copy(fontStyle = FontStyle.Italic),
+                        color = Color.Gray
+                    )
+                }
             }
+
+            // TaskCheckBox outside the column, positioned to the right
+            TaskCheckBox(isChecked = task.isComplete)
+        }
+    }
+}
+
+@Composable
+fun TaskCheckBox(isChecked: Boolean) {
+    val checkedState = rememberSaveable { mutableStateOf(isChecked) }
+
+    Box(
+        modifier = Modifier
+            .size(30.dp)
+            .background(
+                color = if (checkedState.value) MaterialTheme.colorScheme.primary else Color.White,
+                shape = RoundedCornerShape(4.dp)
+            )
+            .clickable { checkedState.value = !checkedState.value }
+    ) {
+        if (checkedState.value) {
+            Icon(
+                imageVector = Icons.Default.Check,
+                contentDescription = null,
+                tint = Color.White,
+                modifier = Modifier
+                    .size(40.dp)
+                    .padding(4.dp)
+            )
         }
     }
 }
