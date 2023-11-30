@@ -18,15 +18,24 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.FocusApp.screens.AuthLoginScreen
+import com.example.FocusApp.screens.LandingScreen
+import com.example.FocusApp.screens.SongListApp
+import com.example.FocusApp.screens.StatsScreen
+import com.example.FocusApp.screens.TaskGeneratorScreen
 import com.example.FocusApp.ui.theme.FocusAppTheme
-import com.example.FocusApp.ui.theme.TaskListViewModel
+import com.example.FocusApp.viewmodels.AccountInformationViewModel
+import com.example.FocusApp.viewmodels.TaskListViewModel
+import com.google.firebase.Firebase
+import com.google.firebase.FirebaseApp
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.auth
 
 /**
  * Main Activity containing a favorite song list application.
@@ -34,7 +43,12 @@ import com.example.FocusApp.ui.theme.TaskListViewModel
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val viewModel = ViewModelProvider(this).get(TaskListViewModel::class.java)
+        val taskListViewModel = ViewModelProvider(this).get(TaskListViewModel::class.java)
+        val accountInformationViewModel = ViewModelProvider(this).get(AccountInformationViewModel::class.java)
+//        lateinit var auth: FirebaseAuth
+//
+//        auth = Firebase.auth
+        FirebaseApp.initializeApp(this)
         setContent {
             FocusAppTheme {
                 Surface(
@@ -49,7 +63,9 @@ class MainActivity : ComponentActivity() {
                         LandingScreen(onTimeout = { showLandingScreen = false})
                     }
                     else {
-                        FocusApp(viewModel)
+                        FocusApp(
+                            taskListViewModel,
+                            accountInformationViewModel)
                     }
                 }
             }
@@ -63,7 +79,11 @@ class MainActivity : ComponentActivity() {
  */
 //@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun FocusApp(viewModel: TaskListViewModel) {
+fun FocusApp(
+    taskListViewModel: TaskListViewModel = TaskListViewModel(),
+    accountInformationViewModel: AccountInformationViewModel = AccountInformationViewModel()
+
+    ) {
 
     // Navigation Setup
     // ----------------
@@ -88,7 +108,8 @@ fun FocusApp(viewModel: TaskListViewModel) {
     { innerPadding ->
         FocusNavHost(
             navController = navController,
-            viewModel = viewModel,
+            taskListViewModel = taskListViewModel,
+            accountInformationViewModel = accountInformationViewModel,
             modifier = Modifier.padding(innerPadding)
         )
     }
@@ -100,13 +121,14 @@ fun FocusApp(viewModel: TaskListViewModel) {
 @Composable
 fun FocusNavHost(
     navController: NavHostController,
-    viewModel: TaskListViewModel, // pass in viewmodel again
+    taskListViewModel: TaskListViewModel, // pass in viewmodel again
+    accountInformationViewModel: AccountInformationViewModel,
     modifier: Modifier
 ){
     // Navigation controlled through NavHost
     NavHost(
         navController = navController,
-        startDestination = Tasks.route,
+        startDestination = Login.route,
         modifier = modifier
     ) {
 
@@ -116,11 +138,17 @@ fun FocusNavHost(
             StatsScreen()
         }
         composable(route = Tasks.route) {
-            SongListApp(viewModel = viewModel)
+            SongListApp(
+                taskListViewModel = taskListViewModel,
+                accountInformationViewModel = accountInformationViewModel)
         }
 
         composable(route = Generators.route){
             TaskGeneratorScreen()
+        }
+
+        composable(route = Login.route){
+            AuthLoginScreen()
         }
     }
 }
