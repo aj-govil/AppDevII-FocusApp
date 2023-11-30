@@ -1,7 +1,9 @@
 package com.example.FocusApp.auth
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.example.FocusApp.MyApp
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
@@ -33,5 +35,14 @@ class AuthViewModel(private val authRepository: AuthRepository): ViewModel(){
         viewModelScope.launch {
             authRepository.delete();
         }
+    }
+}
+
+/* ViewModel Factory that will create our view model by injecting the
+      authRepository from the module.
+ */
+class AuthViewModelFactory : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        return AuthViewModel(MyApp.appModule.authRepository) as T
     }
 }
