@@ -1,5 +1,7 @@
 package com.example.FocusApp.screens
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
@@ -9,6 +11,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import com.example.FocusApp.R
 import kotlinx.coroutines.delay
 
 /**
@@ -19,25 +24,21 @@ import kotlinx.coroutines.delay
 private const val SplashWaitTime: Long = 2000 // wait 2 seconds
 @Composable
 fun LandingScreen(onTimeout: () -> Unit, modifier: Modifier = Modifier) {
-    Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        // This will always refer to the latest onTimeout function that
-        // LandingScreen was recomposed with
-        val currentOnTimeout by rememberUpdatedState(onTimeout)
+    Box(modifier = modifier
+        .fillMaxSize()
+        .background(Color.Black), contentAlignment = Alignment.Center) {
 
-        // Create an effect that matches the lifecycle of LandingScreen.
-        // If LandingScreen recomposes or onTimeout changes,
-        // the delay shouldn't start again.
+        val currentOnTimeout by rememberUpdatedState(onTimeout)
         LaunchedEffect(Unit) {
             delay(SplashWaitTime)
             currentOnTimeout()
         }
-        // Coroutine scopes can be added to fetch data if needed
 
-        // Content to be displayed in the middle of the screen
-        // Dev Note: This can be changed to an icon or custom logo of our choosing
-        // Image(painterResource(id = R.drawable.ic_crane_drawer), contentDescription = null)
-
-        Text(text = "Please wait a moment while gradle gradles :)")
+        Image(
+            painter = painterResource(id = R.drawable.focuslogo),
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize()
+        )
 
     }
 }
