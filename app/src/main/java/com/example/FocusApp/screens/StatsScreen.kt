@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun StatsScreen(): Unit {
     Text(
-        text = "MY FAVORITE STATISTICS SCREEN!!!!!",
+        text = "Statistics on your progress will appear here soon",
         style = MaterialTheme.typography.headlineMedium,
         color = Color.Blue,
         modifier = Modifier.padding(8.dp)
