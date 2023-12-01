@@ -168,7 +168,7 @@ fun AuthLoginScreen(
                 // SIGN UP BUTTON
                 // --------------
                 Button(modifier = Modifier.padding(10.dp).height(48.dp), onClick = {
-                    if (!isEmailValid(email) || isPasswordValid(password)) {
+                    if (!isEmailValid(email) || !isPasswordValid(password)) {
                         // Validation failed, do not proceed with sign up
                     } else {
                         authViewModel.signUp(email, password)
