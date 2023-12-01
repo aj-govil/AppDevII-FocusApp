@@ -61,10 +61,7 @@ import com.example.FocusApp.viewmodels.AccountInformationViewModel
 @Composable
 fun CreateTaskScreen(
     taskListViewModel: TaskListViewModel,
-    accountInformationViewModel: AccountInformationViewModel,
     navController: NavController) {
-
-    var expanded by rememberSaveable { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -190,135 +187,6 @@ fun CreateTaskScreen(
 
 
         Spacer(modifier = Modifier.height(5.dp))
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-        ) {
-            Button(
-                onClick = { expanded = !expanded },
-                modifier = Modifier.fillMaxWidth(0.2f),
-                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.inversePrimary)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Settings,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary
-                )
-                //Text("Account Information")
-            }
-
-            DropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false },
-                modifier = Modifier
-                    .background(Color.Gray)
-                    .fillMaxWidth()
-            ) {
-                Column(
-                    modifier = Modifier
-                        .background(MaterialTheme.colorScheme.inverseOnSurface)
-                        .padding(30.dp)
-                ) {
-                    Row {
-                        Text(
-                            text = "Account Information",
-                            modifier = Modifier
-                                .padding(8.dp),
-                            style = MaterialTheme.typography.headlineMedium,
-                        )
-                        Icon(
-                            imageVector = Icons.Default.Info,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.inverseSurface,
-                            modifier = Modifier.size(50.dp)
-                        )
-                    }
-
-                    Row{
-                        Text(
-                            text = "First\nName:",
-                            modifier = Modifier
-                                .fillMaxWidth(0.2f)
-                                .padding(8.dp)
-                        )
-
-                        TextField(
-                            value = accountInformationViewModel.firstName.value,
-                            onValueChange = { accountInformationViewModel.firstName.value = it },
-                            placeholder = { Text("Enter first name") },
-                            modifier = Modifier
-                                .fillMaxWidth(0.8f)
-                                .padding(5.dp)
-                        )
-                    }
-
-                    Row{
-                        Text(
-                            text = "Last\nName:",
-                            modifier = Modifier
-                                .fillMaxWidth(0.2f)
-                                .padding(8.dp)
-                        )
-
-                        TextField(
-                            value = accountInformationViewModel.lastName.value,
-                            onValueChange = { accountInformationViewModel.lastName.value = it },
-                            placeholder = { Text("Enter last name") },
-                            modifier = Modifier
-                                .fillMaxWidth(0.8f)
-                                .padding(5.dp)
-                        )
-                    }
-
-                    Row{
-                        Text(
-                            text = "Age:",
-                            modifier = Modifier
-                                .fillMaxWidth(0.2f)
-                                .padding(8.dp)
-                        )
-
-                        TextField(
-                            value = accountInformationViewModel.age.value,
-                            onValueChange = { accountInformationViewModel.age.value = it },
-                            placeholder = { Text("Enter your age") },
-                            modifier = Modifier
-                                .fillMaxWidth(0.8f)
-                                .padding(5.dp)
-                        )
-                    }
-
-                    Row{
-                        Text(
-                            text = "Email:",
-                            modifier = Modifier
-                                .fillMaxWidth(0.2f)
-                                .padding(8.dp)
-                        )
-
-                        TextField(
-                            value = accountInformationViewModel.email.value,
-                            onValueChange = { accountInformationViewModel.email.value = it },
-                            placeholder = { Text("Enter email address") },
-                            modifier = Modifier
-                                .fillMaxWidth(0.8f)
-                                .padding(5.dp)
-                        )
-                    }
-
-                    Button(
-                        onClick = { expanded = false },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(25.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.inverseSurface)
-                    ) {
-                        Text("Save and Close")
-                    }
-                }
-            }
-        }
     }
 }
 

@@ -142,7 +142,6 @@ fun FocusNavHost(
         composable(route = Tasks.route) {
             CreateTaskScreen(
                 taskListViewModel = taskListViewModel,
-                accountInformationViewModel = accountInformationViewModel,
                 navController = navController)
 
         }
@@ -150,6 +149,7 @@ fun FocusNavHost(
         composable(route = Generators.route){
             ViewTasksScreen(
                 taskListViewModel = taskListViewModel,
+                accountInformationViewModel = accountInformationViewModel,
                 navController = navController
             )
         }
