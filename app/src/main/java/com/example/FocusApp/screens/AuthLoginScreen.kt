@@ -26,12 +26,16 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.FocusApp.FocusDestination
+import com.example.FocusApp.Tasks
 import com.example.FocusApp.auth.AuthViewModel
 import com.example.FocusApp.auth.AuthViewModelFactory
+import com.example.FocusApp.navigateSingleTopTo
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AuthLoginScreen(
+    currentScreen : FocusDestination,
     navController: NavController,
     authViewModel: AuthViewModel = viewModel(factory= AuthViewModelFactory(),
                         )
@@ -65,21 +69,29 @@ fun AuthLoginScreen(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ){
+                    // Email input
                     EmailField(email = email, onEmailChange = {email = it} )
+                    // Password input
                     PasswordField(password = password, onPasswordChange = {password = it} )
                 }
 
+                // SIGN UP BUTTON
+                // --------------
                 Button(onClick = {
-                    authViewModel.signUp(email, password)
+                    if (password.isEmpty() && email.isEmpty()){
+
+                    }else {
+                        authViewModel.signUp(email, password)
+                    }
+
                 }) {
                     Text("Sign up via email")
                 }
+
+                // SIGN IN BUTTON
+                // --------------
                 Button(onClick = {
                     authViewModel.signIn(email, password)
-                    //TODO: Add Validation Checks
-                    if (password.isNullOrBlank()){
-                        navController.navigate("Tasks")
-                    }
                 }) {
                     Text("Sign in via email")
                 }
@@ -87,7 +99,9 @@ fun AuthLoginScreen(
                 if (userState.value==null)
                     Text("Please sign in")
                 else
-                    Text("Welcome ${userState.value!!.email}")
+                    // POST LOGIN "SCREEN"
+                    // -----------------
+                    Text("Welcome ${userState.value!!.email}", modifier = Modifier.padding(12.dp))
                 Button(onClick = {
                     authViewModel.signOut()
                 }) {
@@ -98,9 +112,22 @@ fun AuthLoginScreen(
                 }) {
                     Text("Delete account")
                 }
+
+                Button(onClick = {
+                    navController.navigate("Tasks")
+                },
+                    modifier = Modifier.padding(50.dp)){
+                    Text("Enter App")
+                }
             }
         }
     }
+
+}
+
+fun isLoginValid(
+    password: String
+){
 
 }
 @OptIn(ExperimentalMaterial3Api::class)
@@ -146,6 +173,7 @@ fun PasswordField(
 fun LoginFields(navController: NavController,
                 authViewModel: AuthViewModel,
                 ) {
+
 
 }
 @Composable
