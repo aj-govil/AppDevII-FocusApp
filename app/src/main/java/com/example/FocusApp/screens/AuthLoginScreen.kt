@@ -56,6 +56,43 @@ fun AuthLoginScreen(
     var emailErrorMessage by remember { mutableStateOf("Temp Email Error") } // error message itself
     var passwordErrorMessage by remember { mutableStateOf("Temp Password Error") } // error message itself
 
+    fun isPasswordValid(
+        password: String,
+    ): Boolean{
+        return if (password.length < 6) {
+            passwordErrorMessage = "Password must be at least 6 characters"
+            true
+        } else {
+            false
+        }
+    }
+    fun isEmailValid(email: String): Boolean {
+        val emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+"
+        return if (!email.matches(emailPattern.toRegex())){
+            emailErrorMessage = "Invalid Email"
+            return false;
+        }else {
+            false
+        }
+    }
+    // Button onClick functions
+    // note: this is repeating code however usually signups require more info, this would be able to deal with that
+    val signUpClick: () -> Unit = {
+        if (!isEmailValid(email) || !isEmailValid(password)) {
+            // Validation failed, do not proceed with sign up
+        } else {
+            authViewModel.signUp(email, password)
+        }
+    }
+
+    val signInClick: () -> Unit = {
+        if (isEmailValid(email) || isPasswordValid(password)) {
+            // Validation failed, do not proceed with sign in
+        } else {
+            authViewModel.signIn(email, password)
+        }
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
