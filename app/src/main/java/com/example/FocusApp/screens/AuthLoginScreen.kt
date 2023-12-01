@@ -132,7 +132,12 @@ fun AuthLoginScreen(
                         )
                     }
                     // Email input
-                    EmailField(email = email, onEmailChange = {email = it}, showEmailError, emailErrorMessage )
+                    EmailField(
+                        email = email,
+                        onEmailChange = {email = it},
+                        isError = showEmailError,
+                        errorText = emailErrorMessage) { signUpClick.invoke() }
+                    
                     if (showPasswordError) {
                         Text(
                             text = passwordErrorMessage,
@@ -211,11 +216,7 @@ fun AuthLoginScreen(
 
 }
 
-fun isPasswordValid(
-    password: String
-){
 
-}
 
 //Validates an email using regex -- TY Fitfolio
 fun isEmailValid(email: String): Boolean {
@@ -228,8 +229,9 @@ fun isEmailValid(email: String): Boolean {
 fun EmailField(
     email: String,
     onEmailChange: (String) -> Unit,
-    showEmailError: Boolean,
-    emailErrorMessage: String
+    isError: Boolean,
+    errorText: String,
+    onImeAction: () -> Unit
 ){
     // This implementation was inspired from FitFolios Login Screen
     OutlinedTextField(
