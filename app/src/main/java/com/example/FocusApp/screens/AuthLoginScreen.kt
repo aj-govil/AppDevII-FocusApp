@@ -56,6 +56,8 @@ fun AuthLoginScreen(
     var emailErrorMessage by remember { mutableStateOf("Temp Email Error") } // error message itself
     var passwordErrorMessage by remember { mutableStateOf("Temp Password Error") } // error message itself
 
+    // Input Validation Methods
+    // ------------------------
     fun isPasswordValid(
         password: String,
     ): Boolean{
@@ -75,7 +77,10 @@ fun AuthLoginScreen(
             false
         }
     }
+
     // Button onClick functions
+    // ------------------------
+    
     // note: this is repeating code however usually signups require more info, this would be able to deal with that
     val signUpClick: () -> Unit = {
         if (!isEmailValid(email) || !isEmailValid(password)) {
@@ -137,7 +142,7 @@ fun AuthLoginScreen(
                         onEmailChange = {email = it},
                         isError = showEmailError,
                         errorText = emailErrorMessage) { signUpClick.invoke() }
-                    
+
                     if (showPasswordError) {
                         Text(
                             text = passwordErrorMessage,
