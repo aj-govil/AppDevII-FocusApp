@@ -36,7 +36,6 @@ import com.example.FocusApp.ui.theme.FocusAppTheme
 import com.example.FocusApp.viewmodels.AccountInformationViewModel
 import com.example.FocusApp.viewmodels.TaskListViewModel
 import com.google.firebase.Firebase
-import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 
@@ -143,7 +142,7 @@ fun FocusNavHost(
         composable(route = Tasks.route) {
             CreateTaskScreen(
                 taskListViewModel = taskListViewModel,
-                accountInformationViewModel = accountInformationViewModel)
+                navController = navController)
         }
 
         composable(route = Generators.route){
@@ -155,11 +154,11 @@ fun FocusNavHost(
         }
 
         composable(route = Login.route){
-            AuthLoginScreen()
+            AuthLoginScreen(navController = navController)
         }
 
         composable(route = Login.route){
-            AuthLoginScreen()
+            AuthLoginScreen(navController = navController)
         }
 
         composable(route = Login.route){

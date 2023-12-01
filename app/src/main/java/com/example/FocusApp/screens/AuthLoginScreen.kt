@@ -5,7 +5,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -21,6 +23,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -82,7 +86,10 @@ fun AuthLoginScreen(
                             color = MaterialTheme.colorScheme.error,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(vertical = 6.dp),
+                                .padding(vertical = 6.dp)
+                                .semantics(mergeDescendants = true) {
+                                    contentDescription = "Email Error Message"
+                                },
                             textAlign = TextAlign.Center,
                         )
                     }
@@ -94,7 +101,10 @@ fun AuthLoginScreen(
                             color = MaterialTheme.colorScheme.error,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(vertical = 6.dp,),
+                                .padding(vertical = 6.dp,)
+                                .semantics(mergeDescendants = true) {
+                                    contentDescription = "Password Error Message"
+                                },
                             textAlign = TextAlign.Center,
                         )
                     }
@@ -104,7 +114,7 @@ fun AuthLoginScreen(
 
                 // SIGN UP BUTTON
                 // --------------
-                Button(onClick = {
+                Button(modifier = Modifier.padding(10.dp).height(48.dp), onClick = {
                     // TODO: Change check to method calls that update errorMessage and showLoginError
                     if (password.isEmpty() && email.isEmpty()){
 
@@ -118,7 +128,7 @@ fun AuthLoginScreen(
 
                 // SIGN IN BUTTON
                 // --------------
-                Button(onClick = {
+                Button(modifier = Modifier.padding(10.dp).height(48.dp), onClick = {
                     authViewModel.signIn(email, password)
                 }) {
                     Text("Sign in via email")
@@ -129,7 +139,12 @@ fun AuthLoginScreen(
                 else
                     // POST LOGIN "SCREEN"
                     // -----------------
-                    Text("Welcome ${userState.value!!.email}", modifier = Modifier.padding(12.dp))
+                    Text("Welcome ${userState.value!!.email}",
+                        modifier = Modifier
+                            .padding(12.dp)
+                            .semantics(mergeDescendants = true) {
+                                contentDescription = "Login Screen Header"
+                            },)
                 Button(onClick = {
                     authViewModel.signOut()
                 }) {
@@ -144,7 +159,12 @@ fun AuthLoginScreen(
                 Button(onClick = {
                     navController.navigate("Tasks")
                 },
-                    modifier = Modifier.padding(50.dp)){
+                    modifier = Modifier
+                        .padding(50.dp)
+                        .size(48.dp)
+                        .semantics(mergeDescendants = true) {
+                            contentDescription = "Enter Button"
+                        },){
                     Text("Enter App")
                 }
             }
