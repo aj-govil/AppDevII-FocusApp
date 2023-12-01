@@ -26,9 +26,14 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.FocusApp.screens.AuthLoginScreen
 import com.example.FocusApp.screens.LandingScreen
-import com.example.FocusApp.screens.SongListApp
+import com.example.FocusApp.screens.CreateTaskScreen
 import com.example.FocusApp.screens.StatsScreen
-import com.example.FocusApp.screens.TaskGeneratorScreen
+import com.example.FocusApp.screens.ViewTasksScreen
+import com.example.FocusApp.ui.theme.FocusAppTheme
+import com.example.FocusApp.viewmodels.AccountInformationViewModel
+import com.example.FocusApp.viewmodels.TaskListViewModel
+import com.google.firebase.FirebaseApp
+import com.example.FocusApp.screens.StatsScreen
 import com.example.FocusApp.ui.theme.FocusAppTheme
 import com.example.FocusApp.viewmodels.AccountInformationViewModel
 import com.example.FocusApp.viewmodels.TaskListViewModel
@@ -138,13 +143,22 @@ fun FocusNavHost(
             StatsScreen()
         }
         composable(route = Tasks.route) {
-            SongListApp(
+            CreateTaskScreen(
                 taskListViewModel = taskListViewModel,
-                accountInformationViewModel = accountInformationViewModel)
+                accountInformationViewModel = accountInformationViewModel,
+                navController = navController)
+
         }
 
         composable(route = Generators.route){
-            TaskGeneratorScreen()
+            ViewTasksScreen(
+                taskListViewModel = taskListViewModel,
+                navController = navController
+            )
+        }
+
+        composable(route = Login.route){
+            AuthLoginScreen()
         }
 
         composable(route = Login.route){

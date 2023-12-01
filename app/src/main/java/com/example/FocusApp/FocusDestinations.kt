@@ -14,11 +14,15 @@ object Stats: FocusDestination {
 }
 
 object Tasks: FocusDestination {
-    override val route = "tasks"
+    override val route = "Add Task"
 }
 
 object Generators: FocusDestination {
-    override val route = "generator"
+    override val route = "My Tasks"
+
+}
+object Login: FocusDestination {
+    override val route = "login"
 
 }
 object Login: FocusDestination {
@@ -28,4 +32,6 @@ object Login: FocusDestination {
 
 
 // Screens to be displayed in the top RallyTabRow
-val focusTabRowScreens = listOf(Tasks, Stats, Generators, Login)
+val focusTabRowScreens = listOf(Generators,Stats, Login)
+
+
