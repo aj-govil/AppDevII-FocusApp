@@ -63,27 +63,32 @@ fun AuthLoginScreen(
     ): Boolean{
         return if (password.length < 6) {
             passwordErrorMessage = "Password must be at least 6 characters"
-            true
-        } else {
+            showPasswordError = true;
             false
+        } else {
+            showPasswordError = false;
+            true
         }
     }
     fun isEmailValid(email: String): Boolean {
         val emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+"
-        return if (!email.matches(emailPattern.toRegex())){
-            emailErrorMessage = "Invalid Email"
-            return false;
+        return if (email.matches(emailPattern.toRegex())){
+            showEmailError = false;
+            emailErrorMessage = "" // set error message
+            true
         }else {
-            false
+            emailErrorMessage = "Invalid Email" // set error message
+            showEmailError = true;
+            return false;
         }
     }
 
     // Button onClick functions
     // ------------------------
-    
+
     // note: this is repeating code however usually signups require more info, this would be able to deal with that
     val signUpClick: () -> Unit = {
-        if (!isEmailValid(email) || !isEmailValid(password)) {
+        if ( /* !isEmailValid(email) || **/ !isPasswordValid(password)) {
             // Validation failed, do not proceed with sign up
         } else {
             authViewModel.signUp(email, password)
@@ -141,7 +146,7 @@ fun AuthLoginScreen(
                         email = email,
                         onEmailChange = {email = it},
                         isError = showEmailError,
-                        errorText = emailErrorMessage) { signUpClick.invoke() }
+                        errorText = emailErrorMessage,)
 
                     if (showPasswordError) {
                         Text(
@@ -163,13 +168,11 @@ fun AuthLoginScreen(
                 // SIGN UP BUTTON
                 // --------------
                 Button(modifier = Modifier.padding(10.dp).height(48.dp), onClick = {
-                    // TODO: Change check to method calls that update errorMessage and showLoginError
-                    if (password.isEmpty() && email.isEmpty()){
-
-                    }else {
+                    if (!isEmailValid(email) || isPasswordValid(password)) {
+                        // Validation failed, do not proceed with sign up
+                    } else {
                         authViewModel.signUp(email, password)
                     }
-
                 }) {
                     Text("Sign up via email")
                 }
@@ -222,13 +225,6 @@ fun AuthLoginScreen(
 }
 
 
-
-//Validates an email using regex -- TY Fitfolio
-fun isEmailValid(email: String): Boolean {
-    val emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+"
-    return email.matches(emailPattern.toRegex())
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EmailField(
@@ -236,21 +232,20 @@ fun EmailField(
     onEmailChange: (String) -> Unit,
     isError: Boolean,
     errorText: String,
-    onImeAction: () -> Unit
 ){
     // This implementation was inspired from FitFolios Login Screen
     OutlinedTextField(
         value = email,
         onValueChange = {
             onEmailChange(it)
-            //TODO: Add email validation that affects isError
         },
         label = { Text("Email") },
-        isError = false, // Changes box field to red outline and red text
+        isError = isError, // Changes box field to red outline and red text
         keyboardOptions = KeyboardOptions.Default.copy(
             keyboardType = KeyboardType.Email,
             imeAction = ImeAction.Next
-        )
+        ),
+
     )
 
 }
