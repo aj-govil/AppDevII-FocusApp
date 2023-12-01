@@ -337,8 +337,8 @@ fun TaskCheckBox(isChecked: Boolean) {
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.surface,
                 modifier = Modifier
-                    .size(40.dp)
                     .padding(4.dp)
+                    .size(48.dp)
             )
         }
     }
