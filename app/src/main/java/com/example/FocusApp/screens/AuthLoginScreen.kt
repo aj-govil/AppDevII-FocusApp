@@ -50,8 +50,8 @@ fun AuthLoginScreen(
     var confirmPassword by rememberSaveable { mutableStateOf("") } // can be added to signup if diff screen
 
     // Error message variables
-    var showEmailError by remember { mutableStateOf(true) } // flag to display error message
-    var showPasswordError by remember { mutableStateOf(true) } // flag to display error message
+    var showEmailError by remember { mutableStateOf(false) } // flag to display error message
+    var showPasswordError by remember { mutableStateOf(false) } // flag to display error message
     var emailErrorMessage by remember { mutableStateOf("Temp Email Error") } // error message itself
     var passwordErrorMessage by remember { mutableStateOf("Temp Password Error") } // error message itself
 
