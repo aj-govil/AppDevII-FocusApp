@@ -30,15 +30,12 @@ import com.example.FocusApp.screens.CreateTaskScreen
 import com.example.FocusApp.screens.StatsScreen
 import com.example.FocusApp.screens.ViewTasksScreen
 import com.example.FocusApp.ui.theme.FocusAppTheme
-import com.example.FocusApp.viewmodels.AccountInformationViewModel
-import com.example.FocusApp.viewmodels.TaskListViewModel
 import com.google.firebase.FirebaseApp
 import com.example.FocusApp.screens.StatsScreen
 import com.example.FocusApp.ui.theme.FocusAppTheme
 import com.example.FocusApp.viewmodels.AccountInformationViewModel
 import com.example.FocusApp.viewmodels.TaskListViewModel
 import com.google.firebase.Firebase
-import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 
