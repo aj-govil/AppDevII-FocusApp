@@ -178,6 +178,7 @@ fun AuthLoginScreen(
                         // Validation failed, do not proceed with sign up
                     } else {
                         authViewModel.signUp(email, password)
+                        // TODO: Display error message is userState value is null (Signup didnt work)
                     }
                 }) {
                     Text("Sign up via email")
@@ -189,6 +190,8 @@ fun AuthLoginScreen(
                     .padding(10.dp)
                     .height(48.dp), onClick = {
                     authViewModel.signIn(email, password)
+                    // TODO: Display error message is userState value is null (Signup didnt work)
+                    
                 }) {
                     Text("Sign in via email")
                 }
