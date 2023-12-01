@@ -27,14 +27,10 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.FocusApp.FocusDestination
-import com.example.FocusApp.Tasks
 import com.example.FocusApp.auth.AuthViewModel
 import com.example.FocusApp.auth.AuthViewModelFactory
-import com.example.FocusApp.navigateSingleTopTo
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -90,9 +86,8 @@ fun AuthLoginScreen(
                             textAlign = TextAlign.Center,
                         )
                     }
-
                     // Email input
-                    EmailField(email = email, onEmailChange = {email = it} )
+                    EmailField(email = email, onEmailChange = {email = it}, showEmailError, emailErrorMessage )
                     if (showPasswordError) {
                         Text(
                             text = passwordErrorMessage,
@@ -104,7 +99,7 @@ fun AuthLoginScreen(
                         )
                     }
                     // Password input
-                    PasswordField(password = password, onPasswordChange = {password = it} )
+                    PasswordField(password = password, onPasswordChange = {password = it}, showPasswordError, passwordErrorMessage )
                 }
 
                 // SIGN UP BUTTON
@@ -167,7 +162,10 @@ fun isLoginValid(
 @Composable
 fun EmailField(
     email: String,
-    onEmailChange: (String) -> Unit){
+    onEmailChange: (String) -> Unit,
+    showEmailError: Boolean,
+    emailErrorMessage: String
+){
     // This implementation was inspired from FitFolios Login Screen
     OutlinedTextField(
         value = email,
@@ -188,7 +186,10 @@ fun EmailField(
 @Composable
 fun PasswordField(
     password: String,
-    onPasswordChange: (String) -> Unit){
+    onPasswordChange: (String) -> Unit,
+    showPasswordError: Boolean,
+    passwordErrorMessage: String
+){
     // This implementation was inspired from FitFolios Login Screen
     OutlinedTextField(
         value = password,
