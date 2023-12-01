@@ -35,7 +35,6 @@ import com.example.FocusApp.navigateSingleTopTo
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AuthLoginScreen(
-    currentScreen : FocusDestination,
     navController: NavController,
     authViewModel: AuthViewModel = viewModel(factory= AuthViewModelFactory(),
                         )
