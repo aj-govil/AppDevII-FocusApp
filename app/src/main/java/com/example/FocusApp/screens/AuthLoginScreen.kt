@@ -167,7 +167,9 @@ fun AuthLoginScreen(
 
                 // SIGN UP BUTTON
                 // --------------
-                Button(modifier = Modifier.padding(10.dp).height(48.dp), onClick = {
+                Button(modifier = Modifier
+                    .padding(10.dp)
+                    .height(48.dp), onClick = {
                     if (!isEmailValid(email) || !isPasswordValid(password)) {
                         // Validation failed, do not proceed with sign up
                     } else {
@@ -179,7 +181,9 @@ fun AuthLoginScreen(
 
                 // SIGN IN BUTTON
                 // --------------
-                Button(modifier = Modifier.padding(10.dp).height(48.dp), onClick = {
+                Button(modifier = Modifier
+                    .padding(10.dp)
+                    .height(48.dp), onClick = {
                     authViewModel.signIn(email, password)
                 }) {
                     Text("Sign in via email")
@@ -212,10 +216,10 @@ fun AuthLoginScreen(
                 },
                     modifier = Modifier
                         .padding(50.dp)
-                        .size(48.dp)
                         .semantics(mergeDescendants = true) {
                             contentDescription = "Enter Button"
-                        },){
+                        },
+                    ){
                     Text("Enter App")
                 }
             }
