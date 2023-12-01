@@ -3,6 +3,7 @@ package com.example.FocusApp.auth
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavController
 import com.example.FocusApp.MyApp
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch

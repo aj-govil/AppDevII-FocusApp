@@ -27,6 +27,4 @@ object Login: FocusDestination {
 }
 
 // Screens to be displayed in the top RallyTabRow
-val focusTabRowScreens = listOf(Generators,Stats, Login)
-
-
+val focusTabRowScreens = listOf(Tasks, Stats, Generators, Login)
