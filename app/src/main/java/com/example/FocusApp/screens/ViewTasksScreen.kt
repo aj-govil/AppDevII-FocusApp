@@ -324,7 +324,7 @@ fun TaskCheckBox(isChecked: Boolean) {
 
     Box(
         modifier = Modifier
-            .size(30.dp)
+            .size(48.dp)
             .background(
                 color = if (checkedState.value) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surface,
                 shape = RoundedCornerShape(4.dp)
