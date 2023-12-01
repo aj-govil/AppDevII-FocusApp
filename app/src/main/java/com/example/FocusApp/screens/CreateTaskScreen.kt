@@ -49,6 +49,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.navigation.NavController
 import com.example.FocusApp.viewmodels.AccountInformationViewModel
 
 
@@ -58,9 +59,10 @@ import com.example.FocusApp.viewmodels.AccountInformationViewModel
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SongListApp(
+fun CreateTaskScreen(
     taskListViewModel: TaskListViewModel,
-    accountInformationViewModel: AccountInformationViewModel) {
+    accountInformationViewModel: AccountInformationViewModel,
+    navController: NavController) {
 
     var expanded by rememberSaveable { mutableStateOf(false) }
 
@@ -165,21 +167,30 @@ fun SongListApp(
             Text("Add Task", color = Color.White)
         }
 
+        // Spacer to add some space between buttons
+        Spacer(modifier = Modifier.height(2.dp))
+
+        // Button to navigate to ViewTasks Screen
+        Button(
+            onClick = {
+              navController.navigate("My Tasks")
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
+                .background(
+                    MaterialTheme.colorScheme.primary,
+                    shape = RoundedCornerShape(20.dp)
+                )
+        ) {
+            Text("View Tasks", color = Color.White)
+        }
+
 
 
 
         Spacer(modifier = Modifier.height(5.dp))
 
-        Box(
-            modifier = Modifier.weight(1f)
-        ) {
-            LazyColumn {
-                items(taskListViewModel.taskList) { task ->
-                    TaskItem(task)
-                }
-            }
-
-        }
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -311,81 +322,7 @@ fun SongListApp(
     }
 }
 
-/**
- * A task that the user has entered.
- */
-@Composable
-fun TaskItem(task: Task) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp)
-            .clip(RoundedCornerShape(8.dp))
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
-            // Task details column
-            Column(
-                modifier = Modifier
-                    .weight(1f) // Takes up most of the available space
-            ) {
-                Text(
-                    text = task.title,
-                    style = MaterialTheme.typography.headlineMedium,
-                    color = Color.Black
-                )
-                Text(
-                    text = task.description,
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = Color.Gray,
-                    modifier = Modifier.padding(vertical = 4.dp)
-                )
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(vertical = 4.dp)
-                ) {
-                    Text(
-                        text = "Due: ${task.dueTime}",
-                        style = MaterialTheme.typography.bodyLarge.copy(fontStyle = FontStyle.Italic),
-                        color = Color.Gray
-                    )
-                }
-            }
 
-            // TaskCheckBox outside the column, positioned to the right
-            TaskCheckBox(isChecked = task.isComplete)
-        }
-    }
-}
-
-@Composable
-fun TaskCheckBox(isChecked: Boolean) {
-    val checkedState = rememberSaveable { mutableStateOf(isChecked) }
-
-    Box(
-        modifier = Modifier
-            .size(30.dp)
-            .background(
-                color = if (checkedState.value) MaterialTheme.colorScheme.primary else Color.White,
-                shape = RoundedCornerShape(4.dp)
-            )
-            .clickable { checkedState.value = !checkedState.value }
-    ) {
-        if (checkedState.value) {
-            Icon(
-                imageVector = Icons.Default.Check,
-                contentDescription = null,
-                tint = Color.White,
-                modifier = Modifier
-                    .size(40.dp)
-                    .padding(4.dp)
-            )
-        }
-    }
-}
 
 fun isValidTime(time: String): Boolean {
     val regex = Regex("^([01]?[0-9]|2[0-3]):[0-5][0-9]\$")
