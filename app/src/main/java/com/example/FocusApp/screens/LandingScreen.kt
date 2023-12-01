@@ -27,22 +27,12 @@ fun LandingScreen(onTimeout: () -> Unit, modifier: Modifier = Modifier) {
     Box(modifier = modifier
         .fillMaxSize()
         .background(Color.Black), contentAlignment = Alignment.Center) {
-        // This will always refer to the latest onTimeout function that
-        // LandingScreen was recomposed with
-        val currentOnTimeout by rememberUpdatedState(onTimeout)
 
-        // Create an effect that matches the lifecycle of LandingScreen.
-        // If LandingScreen recomposes or onTimeout changes,
-        // the delay shouldn't start again.
+        val currentOnTimeout by rememberUpdatedState(onTimeout)
         LaunchedEffect(Unit) {
             delay(SplashWaitTime)
             currentOnTimeout()
         }
-        // Coroutine scopes can be added to fetch data if needed
-
-        // Content to be displayed in the middle of the screen
-        // Dev Note: This can be changed to an icon or custom logo of our choosing
-        // Image(painterResource(id = R.drawable.ic_crane_drawer), contentDescription = null)
 
         Image(
             painter = painterResource(id = R.drawable.focuslogo),

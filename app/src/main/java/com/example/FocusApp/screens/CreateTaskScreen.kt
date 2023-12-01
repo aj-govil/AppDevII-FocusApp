@@ -46,6 +46,8 @@ import com.example.FocusApp.data.Task
 import com.example.FocusApp.viewmodels.TaskListViewModel
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -67,21 +69,28 @@ fun CreateTaskScreen(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
+            .semantics(mergeDescendants = true) {
+                contentDescription = "Create Task Screen"
+            }
     ) {
-        //Header Banner
-        Row {
+        Row (
+            modifier = Modifier
+                .semantics(mergeDescendants = true) {
+                    contentDescription = "Create Task Header"
+                }
+        ) {
             Text(
                 text = "CREATE TASK",
                 style = MaterialTheme.typography.titleLarge.copy(
                     fontWeight = FontWeight.Bold,
                     letterSpacing = 0.1.em,
-                    color = Color.Blue,
+                    color = MaterialTheme.colorScheme.primary,
                     fontFamily = FontFamily.Serif
                 ),
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(
-                        color = Color.Gray.copy(alpha = 0.1f),
+                        color = MaterialTheme.colorScheme.inverseSurface.copy(alpha = 0.1f),
                         shape = RoundedCornerShape(8.dp)
                     )
                     .padding(8.dp)
@@ -98,7 +107,10 @@ fun CreateTaskScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(5.dp)
-                .padding(8.dp),
+                .padding(8.dp)
+                .semantics(mergeDescendants = true) {
+                    contentDescription = "Task Title Input"
+                },
             colors = TextFieldDefaults.textFieldColors(
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent
@@ -115,7 +127,10 @@ fun CreateTaskScreen(
                 .height(120.dp)
                 .padding(5.dp)
                 .padding(top = 1.dp, bottom = 2.dp)
-                .padding(8.dp),
+                .padding(8.dp)
+                .semantics(mergeDescendants = true) {
+                    contentDescription = "Task Description Input"
+                },
             colors = TextFieldDefaults.textFieldColors(
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent
@@ -130,7 +145,10 @@ fun CreateTaskScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(5.dp)
-                .padding(8.dp),
+                .padding(8.dp)
+                .semantics(mergeDescendants = true) {
+                    contentDescription = "Due Time Input"
+                },
             colors = TextFieldDefaults.textFieldColors(
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent
@@ -158,10 +176,11 @@ fun CreateTaskScreen(
             enabled = taskListViewModel.title.value.text.isNotBlank() && taskListViewModel.description.value.text.isNotBlank() && taskListViewModel.dueTime.value.text.isNotBlank(),
             modifier = Modifier
                 .fillMaxWidth()
+                .height(48.dp)
                 .padding(8.dp)
                 .background(MaterialTheme.colorScheme.primary, shape = RoundedCornerShape(20.dp))
         ) {
-            Text("Add Task", color = Color.White)
+            Text("Add Task", color = MaterialTheme.colorScheme.surface)
         }
 
         // Spacer to add some space between buttons
@@ -174,13 +193,17 @@ fun CreateTaskScreen(
             },
             modifier = Modifier
                 .fillMaxWidth()
+                .height(48.dp)
                 .padding(8.dp)
                 .background(
                     MaterialTheme.colorScheme.primary,
                     shape = RoundedCornerShape(20.dp)
                 )
+                .semantics(mergeDescendants = true) {
+                    contentDescription = "View Tasks Button"
+                }
         ) {
-            Text("View Tasks", color = Color.White)
+            Text("View Tasks", color = MaterialTheme.colorScheme.surface)
         }
 
 

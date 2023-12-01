@@ -39,6 +39,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -63,12 +65,20 @@ fun ViewTasksScreen(
 
     var expanded by rememberSaveable { mutableStateOf(false) }
 
-    Column (modifier = Modifier
-        .fillMaxSize()) {
+    Column (
+        modifier = Modifier
+        .fillMaxSize()
+        .semantics(mergeDescendants = true,)
+        {
+            contentDescription = "Main Screen"
+        }) {
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(0.9f)
+                .semantics(mergeDescendants = true) {
+                    contentDescription = "Task List"
+                }
         ) {
             items(taskListViewModel.taskList) { task ->
                 TaskItem(task)
@@ -83,6 +93,10 @@ fun ViewTasksScreen(
                     },
                     modifier = Modifier
                         .padding(16.dp)
+                        .size(50.dp)
+                        .semantics(mergeDescendants = true) {
+                            contentDescription = "Add Task Button"
+                        }
                 ) {
                     Icon(imageVector = Icons.Default.Add, contentDescription = null)
                 }
@@ -92,12 +106,18 @@ fun ViewTasksScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(0.1f)
+                .semantics(mergeDescendants = true) {
+                    contentDescription = "Settings Section"
+                }
         ) {
             Button(
                 onClick = { expanded = !expanded },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(48.dp),
+                    .height(48.dp)
+                    .semantics(mergeDescendants = true) {
+                        contentDescription = "Settings Button"
+                    },
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.inversePrimary)
             ) {
                 Icon(
@@ -111,8 +131,11 @@ fun ViewTasksScreen(
                 expanded = expanded,
                 onDismissRequest = { expanded = false },
                 modifier = Modifier
-                    .background(Color.Gray)
+                    .background(MaterialTheme.colorScheme.inverseSurface)
                     .fillMaxWidth()
+                    .semantics(mergeDescendants = true) {
+                        contentDescription = "Settings Menu"
+                    }
             ) {
                 Column(
                     modifier = Modifier
@@ -123,14 +146,21 @@ fun ViewTasksScreen(
                         Text(
                             text = "Account Information",
                             modifier = Modifier
-                                .padding(8.dp),
+                                .padding(8.dp)
+                                .semantics(mergeDescendants = true) {
+                                    contentDescription = "Account Information"
+                                },
                             style = MaterialTheme.typography.headlineMedium,
                         )
                         Icon(
                             imageVector = Icons.Default.Info,
                             contentDescription = null,
                             tint = MaterialTheme.colorScheme.inverseSurface,
-                            modifier = Modifier.size(50.dp)
+                            modifier = Modifier
+                                .size(50.dp)
+                                .semantics(mergeDescendants = true) {
+                                    contentDescription = "Account Information Icon"
+                                },
                         )
                     }
 
@@ -149,6 +179,9 @@ fun ViewTasksScreen(
                             modifier = Modifier
                                 .fillMaxWidth(0.8f)
                                 .padding(5.dp)
+                                .semantics(mergeDescendants = true) {
+                                    contentDescription = "First Name Text Field"
+                                },
                         )
                     }
 
@@ -167,6 +200,9 @@ fun ViewTasksScreen(
                             modifier = Modifier
                                 .fillMaxWidth(0.8f)
                                 .padding(5.dp)
+                                .semantics(mergeDescendants = true) {
+                                    contentDescription = "Last Name Text Field"
+                                },
                         )
                     }
 
@@ -185,6 +221,9 @@ fun ViewTasksScreen(
                             modifier = Modifier
                                 .fillMaxWidth(0.8f)
                                 .padding(5.dp)
+                                .semantics(mergeDescendants = true) {
+                                    contentDescription = "Age Text Field"
+                                },
                         )
                     }
 
@@ -203,6 +242,9 @@ fun ViewTasksScreen(
                             modifier = Modifier
                                 .fillMaxWidth(0.8f)
                                 .padding(5.dp)
+                                .semantics(mergeDescendants = true) {
+                                    contentDescription = "Email Text Field"
+                                },
                         )
                     }
 
@@ -210,7 +252,11 @@ fun ViewTasksScreen(
                         onClick = { expanded = false },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(25.dp),
+                            .padding(25.dp)
+                            .height(48.dp)
+                            .semantics(mergeDescendants = true) {
+                            contentDescription = "Save and Close Button"
+                            },
                         colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.inverseSurface)
                     ) {
                         Text("Save and Close")
@@ -231,26 +277,28 @@ fun TaskItem(task: Task) {
             .fillMaxWidth()
             .padding(8.dp)
             .clip(RoundedCornerShape(8.dp))
+            .semantics(mergeDescendants = true) {
+                contentDescription = "A task item"
+            },
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)
         ) {
-            // Task details column
             Column(
                 modifier = Modifier
-                    .weight(1f) // Takes up most of the available space
+                    .weight(1f)
             ) {
                 Text(
                     text = task.title,
                     style = MaterialTheme.typography.headlineMedium,
-                    color = Color.Black
+                    color = MaterialTheme.colorScheme.inverseSurface
                 )
                 Text(
                     text = task.description,
                     style = MaterialTheme.typography.bodyLarge,
-                    color = Color.Gray,
+                    color = MaterialTheme.colorScheme.inverseSurface,
                     modifier = Modifier.padding(vertical = 4.dp)
                 )
                 Row(
@@ -260,12 +308,11 @@ fun TaskItem(task: Task) {
                     Text(
                         text = "Due: ${task.dueTime}",
                         style = MaterialTheme.typography.bodyLarge.copy(fontStyle = FontStyle.Italic),
-                        color = Color.Gray
+                        color = MaterialTheme.colorScheme.inverseSurface
                     )
                 }
             }
 
-            // TaskCheckBox outside the column, positioned to the right
             TaskCheckBox(isChecked = task.isComplete)
         }
     }
@@ -279,7 +326,7 @@ fun TaskCheckBox(isChecked: Boolean) {
         modifier = Modifier
             .size(30.dp)
             .background(
-                color = if (checkedState.value) MaterialTheme.colorScheme.primary else Color.White,
+                color = if (checkedState.value) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surface,
                 shape = RoundedCornerShape(4.dp)
             )
             .clickable { checkedState.value = !checkedState.value }
@@ -288,7 +335,7 @@ fun TaskCheckBox(isChecked: Boolean) {
             Icon(
                 imageVector = Icons.Default.Check,
                 contentDescription = null,
-                tint = Color.White,
+                tint = MaterialTheme.colorScheme.surface,
                 modifier = Modifier
                     .size(40.dp)
                     .padding(4.dp)
