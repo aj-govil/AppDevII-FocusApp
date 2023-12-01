@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -43,7 +44,11 @@ fun AuthLoginScreen(
     //Login Values
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
-    var confirmPassword by rememberSaveable { mutableStateOf("") }
+    var confirmPassword by rememberSaveable { mutableStateOf("") } // can be added to signup if diff screen
+
+    // Error message variables
+    var showLoginError by remember { mutableStateOf(false) } // flag to display error message
+    var errorMessage by remember { mutableStateOf("") } // error message itself
 
     Box(
         modifier = Modifier
@@ -68,6 +73,8 @@ fun AuthLoginScreen(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ){
+                    // TODO: Error message above email and password
+
                     // Email input
                     EmailField(email = email, onEmailChange = {email = it} )
                     // Password input
