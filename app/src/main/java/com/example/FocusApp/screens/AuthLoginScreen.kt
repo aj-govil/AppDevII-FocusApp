@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,6 +25,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -47,8 +49,8 @@ fun AuthLoginScreen(
     var confirmPassword by rememberSaveable { mutableStateOf("") } // can be added to signup if diff screen
 
     // Error message variables
-    var showLoginError by remember { mutableStateOf(false) } // flag to display error message
-    var errorMessage by remember { mutableStateOf("") } // error message itself
+    var showLoginError by remember { mutableStateOf(true) } // flag to display error message
+    var errorMessage by remember { mutableStateOf("TemporaryErrorMessage") } // error message itself
 
     Box(
         modifier = Modifier
@@ -67,13 +69,25 @@ fun AuthLoginScreen(
                 Text(text = "Not logged in", modifier = Modifier.padding(bottom = 20.dp), fontWeight = FontWeight.SemiBold )
 
                 // User Input Section
+                // ==================
                 Column(
                     modifier = Modifier
                         .fillMaxWidth(),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ){
+
                     // TODO: Error message above email and password
+                    if (showLoginError) {
+                        Text(
+                            text = errorMessage,
+                            color = MaterialTheme.colorScheme.error,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 6.dp),
+                            textAlign = TextAlign.Center
+                        )
+                    }
 
                     // Email input
                     EmailField(email = email, onEmailChange = {email = it} )
@@ -84,6 +98,7 @@ fun AuthLoginScreen(
                 // SIGN UP BUTTON
                 // --------------
                 Button(onClick = {
+                    // TODO: Change check to method calls that update errorMessage and showLoginError
                     if (password.isEmpty() && email.isEmpty()){
 
                     }else {
@@ -146,8 +161,10 @@ fun EmailField(
         value = email,
         onValueChange = {
             onEmailChange(it)
+            //TODO: Add email validation that affects isError
         },
         label = { Text("Email") },
+        isError = false, // Changes box field to red outline and red text
         keyboardOptions = KeyboardOptions.Default.copy(
             keyboardType = KeyboardType.Email,
             imeAction = ImeAction.Next
@@ -165,8 +182,10 @@ fun PasswordField(
         value = password,
         onValueChange = {
             onPasswordChange(it)
+            //TODO: Add email validation that affects isError
         },
         label = { Text("Password") },
+        isError = false, // Changes box field to red outline and red text
         visualTransformation = PasswordVisualTransformation(),
         keyboardOptions = KeyboardOptions.Default.copy(
             keyboardType = KeyboardType.Email,
