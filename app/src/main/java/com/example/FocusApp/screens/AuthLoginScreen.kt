@@ -56,6 +56,10 @@ fun AuthLoginScreen(
     var emailErrorMessage by remember { mutableStateOf("Temp Email Error") } // error message itself
     var passwordErrorMessage by remember { mutableStateOf("Temp Password Error") } // error message itself
 
+    //Authentication error variables
+    var showAuthError by remember { mutableStateOf(false)} // flag to show if firebase couldn't log in/sign up
+    var authErrorMessage by remember { mutableStateOf("Could not authenticate with firebase")}
+
     // Input Validation Methods
     // ------------------------
     fun isPasswordValid(
