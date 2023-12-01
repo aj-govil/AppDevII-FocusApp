@@ -219,7 +219,8 @@ fun AuthLoginScreen(
                 }
 
                 Button(onClick = {
-                    navController.navigate(Tasks.route)
+                    navController.navigate(Tasks.route) // TODO: Swap with focus destination to keep access to above?
+                                                        // Or setup popBackStack to return to Tasks -> must make this default, would have to add logic to redirect to login
                 },
                     modifier = Modifier
                         .padding(50.dp)
