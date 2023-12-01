@@ -153,11 +153,18 @@ fun AuthLoginScreen(
 
 }
 
-fun isLoginValid(
+fun isPasswordValid(
     password: String
 ){
 
 }
+
+//Validates an email using regex -- TY Fitfolio
+fun isEmailValid(email: String): Boolean {
+    val emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+"
+    return email.matches(emailPattern.toRegex())
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EmailField(
