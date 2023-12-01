@@ -33,6 +33,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.FocusApp.Tasks
 import com.example.FocusApp.auth.AuthViewModel
 import com.example.FocusApp.auth.AuthViewModelFactory
 
@@ -157,7 +158,7 @@ fun AuthLoginScreen(
                 }
 
                 Button(onClick = {
-                    navController.navigate("Tasks")
+                    navController.navigate(Tasks.route)
                 },
                     modifier = Modifier
                         .padding(50.dp)
