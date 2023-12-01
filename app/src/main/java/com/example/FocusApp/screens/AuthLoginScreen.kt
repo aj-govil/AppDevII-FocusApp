@@ -168,17 +168,3 @@ fun PasswordField(
     )
 
 }
-@Composable
-fun LoginFields(navController: NavController,
-                authViewModel: AuthViewModel,
-                ) {
-
-
-}
-@Composable
-fun AuthSignUpScreen(
-    navController: NavController,
-    authViewModel: AuthViewModel,){
-
-
-}
