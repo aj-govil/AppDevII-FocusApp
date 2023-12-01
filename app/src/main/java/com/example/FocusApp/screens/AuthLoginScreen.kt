@@ -189,7 +189,12 @@ fun AuthLoginScreen(
                 Button(modifier = Modifier
                     .padding(10.dp)
                     .height(48.dp), onClick = {
-                    authViewModel.signIn(email, password)
+                    // Note: This verification isn't checking firebase so results can look wonky -- TODO below should address
+                    if(!isEmailValid(email) || !isPasswordValid(password)){
+                        // Validation failed, do not proceed with sign up
+                    }else {
+                        authViewModel.signIn(email, password)
+                    }
                     // TODO: Display error message is userState value is null (Signup didnt work)
                     
                 }) {
