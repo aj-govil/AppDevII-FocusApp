@@ -27,6 +27,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.FocusApp.FocusDestination
@@ -49,8 +50,10 @@ fun AuthLoginScreen(
     var confirmPassword by rememberSaveable { mutableStateOf("") } // can be added to signup if diff screen
 
     // Error message variables
-    var showLoginError by remember { mutableStateOf(true) } // flag to display error message
-    var errorMessage by remember { mutableStateOf("TemporaryErrorMessage") } // error message itself
+    var showEmailError by remember { mutableStateOf(true) } // flag to display error message
+    var showPasswordError by remember { mutableStateOf(true) } // flag to display error message
+    var emailErrorMessage by remember { mutableStateOf("Temp Email Error") } // error message itself
+    var passwordErrorMessage by remember { mutableStateOf("Temp Password Error") } // error message itself
 
     Box(
         modifier = Modifier
@@ -76,21 +79,30 @@ fun AuthLoginScreen(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ){
-
-                    // TODO: Error message above email and password
-                    if (showLoginError) {
+                    
+                    if (showEmailError) {
                         Text(
-                            text = errorMessage,
+                            text = emailErrorMessage,
                             color = MaterialTheme.colorScheme.error,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(vertical = 6.dp),
-                            textAlign = TextAlign.Center
+                            textAlign = TextAlign.Center,
                         )
                     }
 
                     // Email input
                     EmailField(email = email, onEmailChange = {email = it} )
+                    if (showPasswordError) {
+                        Text(
+                            text = passwordErrorMessage,
+                            color = MaterialTheme.colorScheme.error,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 6.dp,),
+                            textAlign = TextAlign.Center,
+                        )
+                    }
                     // Password input
                     PasswordField(password = password, onPasswordChange = {password = it} )
                 }
