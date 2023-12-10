@@ -165,7 +165,6 @@ fun FocusNavHost(
             StatsScreen()
         }
         composable(route = Tasks.route) {
-
             ViewTasksScreen(
                 taskListViewModel = taskListViewModel,
                 accountInformationViewModel = accountInformationViewModel,
