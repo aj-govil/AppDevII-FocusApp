@@ -96,6 +96,15 @@ fun FocusApp(
     ) {
     val userState = authViewModel.currentUser().collectAsState() // check to see if user loggedin is saved here
 
+    var startDestination = Login.route // Default start is login screen
+    var hideTabs = true; // Default gate access to Tabs
+
+    // If user is already logged in, set it to My Tasks
+    if (userState.value != null){
+        startDestination = Tasks.route
+        hideTabs = false
+    }
+
     // Navigation Setup
     // ----------------
     val navController = rememberNavController()
@@ -109,18 +118,23 @@ fun FocusApp(
     // Application Setup
     // ------------------
     Scaffold (
-        topBar = {
-                FocusTabRow(allScreens = focusTabRowScreens,
-                    onTabSelected = { newScreen -> navController.navigateSingleTopTo(newScreen.route)} ,
-                    currentScreen = currentScreen
-                )
-        }
+            topBar = {
+                if(!hideTabs){
+                    FocusTabRow(allScreens = focusTabRowScreens,
+                        onTabSelected = { newScreen -> navController.navigateSingleTopTo(newScreen.route)} ,
+                        currentScreen = currentScreen
+                    )
+                }
+            }
+
     )
     { innerPadding ->
         FocusNavHost(
             navController = navController,
             taskListViewModel = taskListViewModel,
             accountInformationViewModel = accountInformationViewModel,
+            authViewModel = authViewModel,
+            startDestination = startDestination,
             modifier = Modifier.padding(innerPadding)
         )
     }
@@ -134,12 +148,14 @@ fun FocusNavHost(
     navController: NavHostController,
     taskListViewModel: TaskListViewModel, // pass in viewmodel again
     accountInformationViewModel: AccountInformationViewModel,
+    authViewModel: AuthViewModel = viewModel(factory= AuthViewModelFactory()),
+    startDestination: String = Login.route,
     modifier: Modifier
 ){
     // Navigation controlled through NavHost
     NavHost(
         navController = navController,
-        startDestination = Tasks.route,
+        startDestination = startDestination,
         modifier = modifier
     ) {
 
