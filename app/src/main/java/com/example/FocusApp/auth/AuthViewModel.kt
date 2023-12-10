@@ -12,6 +12,16 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
+
+/* ViewModel Factory that will create our view model by injecting the
+      authRepository from the module.
+ */
+class AuthViewModelFactory : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        return AuthViewModel(MyApp.appModule.authRepository) as T
+    }
+}
+
 class AuthViewModel(private val authRepository: AuthRepository): ViewModel(){
 
     private val _signInResult = MutableStateFlow<ResultAuth<Boolean>?>(ResultAuth.Inactive)
@@ -97,14 +107,5 @@ class AuthViewModel(private val authRepository: AuthRepository): ViewModel(){
                 _signOutResult.value = ResultAuth.Inactive
             }
         }
-    }
-}
-
-/* ViewModel Factory that will create our view model by injecting the
-      authRepository from the module.
- */
-class AuthViewModelFactory : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return AuthViewModel(MyApp.appModule.authRepository) as T
     }
 }
