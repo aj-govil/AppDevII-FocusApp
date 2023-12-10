@@ -102,6 +102,7 @@ fun FocusApp(
     ) {
     val userState = authViewModel.currentUser().collectAsState() // check to see if user loggedin is saved here
 
+    // Navigation variables
     var startDestination = Login.route // Default start is login screen
     var hideTabs = true; // Default gate access to Tabs
 
