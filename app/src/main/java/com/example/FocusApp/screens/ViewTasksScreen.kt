@@ -18,7 +18,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -39,17 +38,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.NavHostController
 import com.example.FocusApp.Generators
 import com.example.FocusApp.data.Task
-import com.example.FocusApp.navigateSingleTopTo
 import com.example.FocusApp.viewmodels.AccountInformationViewModel
 import com.example.FocusApp.viewmodels.ProfileViewModel
 import com.example.FocusApp.viewmodels.TaskListViewModel
@@ -183,8 +178,8 @@ fun ViewTasksScreen(
                             value = accountInformationViewModel.firstName.value,
                             onValueChange = {
                                             accountInformationViewModel.firstName.value = it
-                                            // set name in UI state
-                                            myUiState.name = it.text},
+                                            myUiState.name = it.text // set name in UI state
+                                            },
                             placeholder = { Text(myUiState.name) },
                             modifier = Modifier
                                 .fillMaxWidth(0.8f)
@@ -205,8 +200,11 @@ fun ViewTasksScreen(
 
                         TextField(
                             value = accountInformationViewModel.lastName.value,
-                            onValueChange = { accountInformationViewModel.lastName.value = it },
-                            placeholder = { Text("Enter last name") },
+                            onValueChange = {
+                                                accountInformationViewModel.lastName.value = it
+                                                myUiState.lastName = it.text
+                                            },
+                            placeholder = { Text(myUiState.lastName) },
                             modifier = Modifier
                                 .fillMaxWidth(0.8f)
                                 .padding(5.dp)
@@ -226,8 +224,11 @@ fun ViewTasksScreen(
 
                         TextField(
                             value = accountInformationViewModel.age.value,
-                            onValueChange = { accountInformationViewModel.age.value = it },
-                            placeholder = { Text("Enter your age") },
+                            onValueChange = {
+                                                accountInformationViewModel.age.value = it
+                                                myUiState.age = it.text.toInt()
+                                            },
+                            placeholder = { Text(myUiState.age.toString()) },
                             modifier = Modifier
                                 .fillMaxWidth(0.8f)
                                 .padding(5.dp)
@@ -247,8 +248,11 @@ fun ViewTasksScreen(
 
                         TextField(
                             value = accountInformationViewModel.email.value,
-                            onValueChange = { accountInformationViewModel.email.value = it },
-                            placeholder = { Text("Enter email address") },
+                            onValueChange = {
+                                                accountInformationViewModel.email.value = it
+                                                myUiState.email = it.text
+                                            },
+                            placeholder = { Text(myUiState.email) },
                             modifier = Modifier
                                 .fillMaxWidth(0.8f)
                                 .padding(5.dp)
@@ -262,7 +266,7 @@ fun ViewTasksScreen(
                         onClick = {
                             expanded = false
                             // Set Profile info in datastore
-                            profileViewModel.setName(myUiState.name)
+                            profileViewModel.setProfileData(myUiState.name, myUiState.lastName, myUiState.email, myUiState.age)
                                   },
                         modifier = Modifier
                             .fillMaxWidth()
