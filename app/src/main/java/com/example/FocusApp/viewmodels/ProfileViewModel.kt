@@ -40,9 +40,9 @@ class ProfileViewModel(private val profileRepository: ProfileRepository) :
         }
     }
 
-    fun setName(newName: String) {
+    fun setProfileData(newName: String, newLastName: String, newEmail: String, newAge: Int) {
         viewModelScope.launch {
-            _uiState.update { it.copy(name = newName) }
+            _uiState.update { it.copy(name = newName, lastName = newLastName, email = newEmail, age=newAge) }
             profileRepository.saveProfile (_uiState.value)
         }
     }
