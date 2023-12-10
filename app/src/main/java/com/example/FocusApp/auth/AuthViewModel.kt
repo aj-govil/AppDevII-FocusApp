@@ -31,8 +31,20 @@ class AuthViewModel(private val authRepository: AuthRepository): ViewModel(){
     }
 
     fun signUp(email: String, password: String){
-        viewModelScope.launch {
-            authRepository.signUp(email,password);
+        _signUpResult.value = ResultAuth.InProgress
+        viewModelScope.launch(Dispatchers.IO) {
+            delay(3000) // TODO: Remove.  Only here to demonstrate inprogress snackbar
+            try {
+                val success = authRepository.signUp(email, password)
+                _signUpResult.value = ResultAuth.Success(success)
+            } catch (e: FirebaseAuthException) {
+                _signUpResult.value = ResultAuth.Failure(e)
+            } finally {
+                // Reset the others since they are no longer applicable
+                _signInResult.value = ResultAuth.Inactive
+                _signOutResult.value = ResultAuth.Inactive
+                _deleteAccountResult.value = ResultAuth.Inactive
+            }
         }
     }
 
