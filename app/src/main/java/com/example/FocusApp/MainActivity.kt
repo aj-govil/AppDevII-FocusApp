@@ -12,18 +12,22 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.FocusApp.auth.AuthViewModel
+import com.example.FocusApp.auth.AuthViewModelFactory
 import com.example.FocusApp.screens.AuthLoginScreen
 import com.example.FocusApp.screens.LandingScreen
 import com.example.FocusApp.screens.CreateTaskScreen
@@ -38,6 +42,7 @@ import com.example.FocusApp.viewmodels.TaskListViewModel
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 /**
  * Main Activity containing a favorite song list application.
@@ -51,6 +56,7 @@ class MainActivity : ComponentActivity() {
 //
 //        auth = Firebase.auth
         FirebaseApp.initializeApp(this)
+
         setContent {
             FocusAppTheme {
                 Surface(
@@ -83,9 +89,11 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun FocusApp(
     taskListViewModel: TaskListViewModel = TaskListViewModel(),
-    accountInformationViewModel: AccountInformationViewModel = AccountInformationViewModel()
+    accountInformationViewModel: AccountInformationViewModel = AccountInformationViewModel(),
+    authViewModel: AuthViewModel = viewModel(factory= AuthViewModelFactory())
 
     ) {
+    val userState = authViewModel.currentUser().collectAsState() // check to see if user loggedin is saved here
 
     // Navigation Setup
     // ----------------
