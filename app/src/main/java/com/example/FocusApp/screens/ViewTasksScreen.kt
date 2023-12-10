@@ -46,6 +46,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import com.example.FocusApp.Generators
 import com.example.FocusApp.data.Task
 import com.example.FocusApp.navigateSingleTopTo
 import com.example.FocusApp.viewmodels.AccountInformationViewModel
@@ -89,7 +90,7 @@ fun ViewTasksScreen(
 
                 FloatingActionButton(
                     onClick = {
-                        navController.navigate("Add Task")
+                        navController.navigate(Generators.route)
                     },
                     modifier = Modifier
                         .padding(16.dp)
