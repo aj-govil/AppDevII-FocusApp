@@ -21,7 +21,7 @@ object Tasks: FocusDestination {
     override val route = "My Tasks"
 }
 object Login: FocusDestination {
-    override val route = "login"
+    override val route = "Account"
 
 }
 
