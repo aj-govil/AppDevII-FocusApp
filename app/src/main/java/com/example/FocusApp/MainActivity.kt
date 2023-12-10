@@ -46,6 +46,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.FocusApp.viewmodels.ProfileFactory
 import com.example.FocusApp.viewmodels.ProfileViewModel
 import com.google.android.gms.tasks.Task
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.firestore
 
 /**
  * Main Activity containing a favorite song list application.
@@ -55,10 +57,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         val taskListViewModel = ViewModelProvider(this).get(TaskListViewModel::class.java)
         val accountInformationViewModel = ViewModelProvider(this).get(AccountInformationViewModel::class.java)
-//        lateinit var auth: FirebaseAuth
-//
-//        auth = Firebase.auth
+
         FirebaseApp.initializeApp(this)
+        val db = Firebase.firestore
 
         setContent {
             FocusAppTheme {
@@ -76,7 +77,8 @@ class MainActivity : ComponentActivity() {
                     else {
                         FocusApp(
                             taskListViewModel,
-                            accountInformationViewModel)
+                            accountInformationViewModel,
+                            db = db)
                     }
                 }
             }
@@ -94,7 +96,8 @@ fun FocusApp(
     taskListViewModel: TaskListViewModel = TaskListViewModel(),
     accountInformationViewModel: AccountInformationViewModel = AccountInformationViewModel(),
     profileViewModel: ProfileViewModel = viewModel(factory= ProfileFactory()), // First instantiation of profileViewModel
-    authViewModel: AuthViewModel = viewModel(factory= AuthViewModelFactory()) // First instantiation of authViewModel
+    authViewModel: AuthViewModel = viewModel(factory= AuthViewModelFactory()), // First instantiation of authViewModel
+    db: FirebaseFirestore
 
     ) {
     val userState = authViewModel.currentUser().collectAsState() // check to see if user loggedin is saved here
