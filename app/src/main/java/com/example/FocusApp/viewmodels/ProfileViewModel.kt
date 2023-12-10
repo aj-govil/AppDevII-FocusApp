@@ -50,9 +50,9 @@ class ProfileViewModel(private val profileRepository: ProfileRepository) :
     /* Increments the value of the counter stored in the state flow */
     fun increment() {
         viewModelScope.launch {
-            var count = _uiState.value.counter;
+            var age = _uiState.value.age;
             _uiState.update { currentState ->
-                currentState.copy(counter = count + 1)
+                currentState.copy(age = age + 1)
             }
             profileRepository.saveProfile (_uiState.value)
         }

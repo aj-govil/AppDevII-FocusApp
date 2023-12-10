@@ -28,7 +28,7 @@ class ProfileRepositoryDataStore (private val context: Context) : ProfileReposit
     override suspend fun saveProfile(profileData: ProfileData) {
         context.dataStore.edit {
             it[NAME] = profileData.name
-            it[COUNTER] = profileData.counter
+            it[COUNTER] = profileData.age
         }
     }
 
@@ -37,7 +37,7 @@ class ProfileRepositoryDataStore (private val context: Context) : ProfileReposit
     override fun getProfile(): Flow<ProfileData> = context.dataStore.data.map {
         ProfileData(
             name = it[NAME] ?: "",
-            counter = it[COUNTER] ?: 0
+            age = it[COUNTER] ?: 0
         )
     }
 
