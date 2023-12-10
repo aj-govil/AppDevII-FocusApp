@@ -93,8 +93,8 @@ class MainActivity : ComponentActivity() {
 fun FocusApp(
     taskListViewModel: TaskListViewModel = TaskListViewModel(),
     accountInformationViewModel: AccountInformationViewModel = AccountInformationViewModel(),
-    profileViewModel: ProfileViewModel = viewModel(factory= ProfileFactory()),
-    authViewModel: AuthViewModel = viewModel(factory= AuthViewModelFactory())
+    profileViewModel: ProfileViewModel = viewModel(factory= ProfileFactory()), // First instantiation of profileViewModel
+    authViewModel: AuthViewModel = viewModel(factory= AuthViewModelFactory()) // First instantiation of authViewModel
 
     ) {
     val userState = authViewModel.currentUser().collectAsState() // check to see if user loggedin is saved here
