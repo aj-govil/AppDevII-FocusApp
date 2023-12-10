@@ -48,6 +48,7 @@ fun AuthLoginScreen(
     authViewModel: AuthViewModel = viewModel(factory= AuthViewModelFactory(),
                         )
 ) {
+    // Viewmodel usages inspired by Talibs slides and KotlinWithCompose Repository
     // View Model Variables
     val userState = authViewModel.currentUser().collectAsState()
 
