@@ -180,7 +180,9 @@ fun FocusNavHost(
         }
 
         composable(route = Login.route){
-            AuthLoginScreen(navController = navController)
+            AuthLoginScreen(
+                navController = navController,
+                authViewModel = authViewModel)
         }
     }
 }
