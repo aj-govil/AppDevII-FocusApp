@@ -21,14 +21,18 @@ private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(na
 class ProfileRepositoryDataStore (private val context: Context) : ProfileRepository  {
     companion object {
         val NAME = stringPreferencesKey("NAME")
-        val COUNTER = intPreferencesKey("COUNTER")
+        val LASTNAME = stringPreferencesKey("LASTNAME")
+        val EMAIL = stringPreferencesKey("EMAIL")
+        val AGE = intPreferencesKey("COUNTER")
     }
 
     /** Update the values in the DataStore. */
     override suspend fun saveProfile(profileData: ProfileData) {
         context.dataStore.edit {
             it[NAME] = profileData.name
-            it[COUNTER] = profileData.counter
+            it[LASTNAME] = profileData.lastName
+            it[AGE] = profileData.age
+            it[EMAIL] = profileData.email
         }
     }
 
@@ -36,8 +40,10 @@ class ProfileRepositoryDataStore (private val context: Context) : ProfileReposit
      *     been used yet, handle the null case with default values. */
     override fun getProfile(): Flow<ProfileData> = context.dataStore.data.map {
         ProfileData(
-            name = it[NAME] ?: "",
-            counter = it[COUNTER] ?: 0
+            name = it[NAME] ?: "Enter first name",
+            lastName = it[LASTNAME]?: "Enter a last name",
+            email = it[EMAIL]?: "Enter an email",
+            age = it[AGE] ?: 0
         )
     }
 

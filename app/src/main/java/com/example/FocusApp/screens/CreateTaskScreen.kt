@@ -52,6 +52,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.navigation.NavController
+import com.example.FocusApp.Tasks
 import com.example.FocusApp.viewmodels.AccountInformationViewModel
 
 
@@ -189,7 +190,7 @@ fun CreateTaskScreen(
         // Button to navigate to ViewTasks Screen
         Button(
             onClick = {
-              navController.navigate("My Tasks")
+              navController.navigate(Tasks.route)
             },
             modifier = Modifier
                 .fillMaxWidth()

@@ -2,5 +2,7 @@ package com.example.FocusApp.model
 
 data class ProfileData  (
     var name: String = "",
-    var counter: Int = 0
+    var lastName: String = "",
+    var email: String = "",
+    var age: Int = 0
 )
