@@ -160,15 +160,7 @@ fun FocusNavHost(
                 navController = navController
             )
         }
-
-        composable(route = Login.route){
-            AuthLoginScreen(navController = navController)
-        }
-
-        composable(route = Login.route){
-            AuthLoginScreen(navController = navController)
-        }
-
+        
         composable(route = Login.route){
             AuthLoginScreen(navController = navController)
         }
