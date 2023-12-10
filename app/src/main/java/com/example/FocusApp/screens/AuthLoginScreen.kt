@@ -169,26 +169,6 @@ fun AuthLoginScreen(
         }
     }
 
-    // Button onClick functions
-    // ------------------------
-
-    // note: this is repeating code however usually signups require more info, this would be able to deal with that
-    val signUpClick: () -> Unit = {
-        if ( /* !isEmailValid(email) || **/ !isPasswordValid(password)) {
-            // Validation failed, do not proceed with sign up
-        } else {
-            authViewModel.signUp(email, password)
-        }
-    }
-
-    val signInClick: () -> Unit = {
-        if (isEmailValid(email) || isPasswordValid(password)) {
-            // Validation failed, do not proceed with sign in
-        } else {
-            authViewModel.signIn(email, password)
-        }
-    }
-
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -217,7 +197,7 @@ fun AuthLoginScreen(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ){
-                    
+
                     if (showEmailError) {
                         Text(
                             text = emailErrorMessage,
@@ -282,7 +262,7 @@ fun AuthLoginScreen(
                         authViewModel.signIn(email, password)
                     }
                     // TODO: Display error message is userState value is null (Signup didnt work)
-                    
+
                 }) {
                     Text("Sign in via email")
                 }
@@ -307,19 +287,6 @@ fun AuthLoginScreen(
                     authViewModel.delete()
                 }) {
                     Text("Delete account")
-                }
-
-                Button(onClick = {
-                    navController.navigate(Tasks.route) // TODO: Swap with focus destination to keep access to above?
-                                                        // Or setup popBackStack to return to Tasks -> must make this default, would have to add logic to redirect to login
-                },
-                    modifier = Modifier
-                        .padding(50.dp)
-                        .semantics(mergeDescendants = true) {
-                            contentDescription = "Enter Button"
-                        },
-                    ){
-                    Text("Enter App")
                 }
             }
         }
