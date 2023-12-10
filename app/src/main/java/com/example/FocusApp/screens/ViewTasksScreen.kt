@@ -48,6 +48,7 @@ import com.example.FocusApp.data.Task
 import com.example.FocusApp.viewmodels.AccountInformationViewModel
 import com.example.FocusApp.viewmodels.ProfileViewModel
 import com.example.FocusApp.viewmodels.TaskListViewModel
+import com.google.firebase.firestore.FirebaseFirestore
 
 
 /**
@@ -59,7 +60,8 @@ fun ViewTasksScreen(
     taskListViewModel: TaskListViewModel,
     accountInformationViewModel: AccountInformationViewModel,
     profileViewModel: ProfileViewModel,
-    navController: NavController
+    navController: NavController,
+    db: FirebaseFirestore
 ) {
 
     var expanded by rememberSaveable { mutableStateOf(false) }

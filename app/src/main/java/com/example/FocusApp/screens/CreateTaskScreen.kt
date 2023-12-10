@@ -54,6 +54,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.navigation.NavController
 import com.example.FocusApp.Tasks
 import com.example.FocusApp.viewmodels.AccountInformationViewModel
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.FirebaseFirestore
 
 
 /**
@@ -64,7 +66,9 @@ import com.example.FocusApp.viewmodels.AccountInformationViewModel
 @Composable
 fun CreateTaskScreen(
     taskListViewModel: TaskListViewModel,
-    navController: NavController) {
+    navController: NavController,
+    db: FirebaseFirestore
+) {
 
     Column(
         modifier = Modifier
