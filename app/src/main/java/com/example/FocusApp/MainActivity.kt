@@ -143,6 +143,7 @@ fun FocusApp(
             profileViewModel = profileViewModel,
             authViewModel = authViewModel,
             startDestination = startDestination,
+            db = db,
             modifier = Modifier.padding(innerPadding)
         )
     }
@@ -158,6 +159,7 @@ fun FocusNavHost(
     accountInformationViewModel: AccountInformationViewModel,
     profileViewModel: ProfileViewModel,
     authViewModel: AuthViewModel = viewModel(factory= AuthViewModelFactory()),
+    db : FirebaseFirestore,
     startDestination: String = Login.route,
     modifier: Modifier
 ){
@@ -178,14 +180,17 @@ fun FocusNavHost(
                 taskListViewModel = taskListViewModel,
                 accountInformationViewModel = accountInformationViewModel,
                 profileViewModel = profileViewModel,
-                navController = navController
+                navController = navController,
+                db = db
             )
         }
 
         composable(route = Generators.route){
             CreateTaskScreen(
                 taskListViewModel = taskListViewModel,
-                navController = navController)
+                navController = navController,
+                db = db
+            )
         }
 
         composable(route = Login.route){
