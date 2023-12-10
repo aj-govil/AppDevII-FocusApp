@@ -45,8 +45,7 @@ import com.example.FocusApp.auth.ResultAuth
 @Composable
 fun AuthLoginScreen(
     navController: NavController,
-    authViewModel: AuthViewModel = viewModel(factory= AuthViewModelFactory(),
-                        )
+    authViewModel: AuthViewModel = viewModel(factory= AuthViewModelFactory())
 ) {
     // Viewmodel usages inspired by Talibs slides and KotlinWithCompose Repository
     // View Model Variables
