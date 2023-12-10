@@ -178,7 +178,7 @@ fun ViewTasksScreen(
                             value = accountInformationViewModel.firstName.value,
                             onValueChange = {
                                             accountInformationViewModel.firstName.value = it
-                                            myUiState.name = it.text // set name in UI state
+                                            myUiState.name = it.text // set name in UI state (for datastore)
                                             },
                             placeholder = { Text(myUiState.name) },
                             modifier = Modifier
@@ -202,7 +202,7 @@ fun ViewTasksScreen(
                             value = accountInformationViewModel.lastName.value,
                             onValueChange = {
                                                 accountInformationViewModel.lastName.value = it
-                                                myUiState.lastName = it.text
+                                                myUiState.lastName = it.text // set lastName in UI State (for datastore)
                                             },
                             placeholder = { Text(myUiState.lastName) },
                             modifier = Modifier
@@ -226,7 +226,7 @@ fun ViewTasksScreen(
                             value = accountInformationViewModel.age.value,
                             onValueChange = {
                                                 accountInformationViewModel.age.value = it
-                                                myUiState.age = it.text.toInt()
+                                                myUiState.age = it.text.toInt() // set age in UiState (for datastore)
                                             },
                             placeholder = { Text(myUiState.age.toString()) },
                             modifier = Modifier
@@ -250,7 +250,7 @@ fun ViewTasksScreen(
                             value = accountInformationViewModel.email.value,
                             onValueChange = {
                                                 accountInformationViewModel.email.value = it
-                                                myUiState.email = it.text
+                                                myUiState.email = it.text // set email in UI State (for datastore)
                                             },
                             placeholder = { Text(myUiState.email) },
                             modifier = Modifier
@@ -265,7 +265,7 @@ fun ViewTasksScreen(
                     Button(
                         onClick = {
                             expanded = false
-                            // Set Profile info in datastore
+                            // Set Profile info in viewmodel - in turn saves in datastore
                             profileViewModel.setProfileData(myUiState.name, myUiState.lastName, myUiState.email, myUiState.age)
                                   },
                         modifier = Modifier
