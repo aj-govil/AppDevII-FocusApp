@@ -43,6 +43,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.google.android.gms.tasks.Task
 
 /**
  * Main Activity containing a favorite song list application.
@@ -138,7 +139,7 @@ fun FocusNavHost(
     // Navigation controlled through NavHost
     NavHost(
         navController = navController,
-        startDestination = Login.route,
+        startDestination = Tasks.route,
         modifier = modifier
     ) {
 
@@ -148,19 +149,20 @@ fun FocusNavHost(
             StatsScreen()
         }
         composable(route = Tasks.route) {
-            CreateTaskScreen(
-                taskListViewModel = taskListViewModel,
-                navController = navController)
-        }
 
-        composable(route = Generators.route){
             ViewTasksScreen(
                 taskListViewModel = taskListViewModel,
                 accountInformationViewModel = accountInformationViewModel,
                 navController = navController
             )
         }
-        
+
+        composable(route = Generators.route){
+            CreateTaskScreen(
+                taskListViewModel = taskListViewModel,
+                navController = navController)
+        }
+
         composable(route = Login.route){
             AuthLoginScreen(navController = navController)
         }
