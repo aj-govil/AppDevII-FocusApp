@@ -13,8 +13,11 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -36,6 +39,7 @@ import androidx.navigation.NavController
 import com.example.FocusApp.Tasks
 import com.example.FocusApp.auth.AuthViewModel
 import com.example.FocusApp.auth.AuthViewModelFactory
+import com.example.FocusApp.auth.ResultAuth
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -44,6 +48,7 @@ fun AuthLoginScreen(
     authViewModel: AuthViewModel = viewModel(factory= AuthViewModelFactory(),
                         )
 ) {
+    // View Model Variables
     val userState = authViewModel.currentUser().collectAsState()
 
     // Auth Results variables
