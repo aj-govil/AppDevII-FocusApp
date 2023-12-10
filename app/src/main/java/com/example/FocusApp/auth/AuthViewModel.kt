@@ -49,18 +49,53 @@ class AuthViewModel(private val authRepository: AuthRepository): ViewModel(){
     }
 
     fun signIn(email: String, password: String){
-        viewModelScope.launch {
-            authRepository.signIn(email,password);
+        _signInResult.value = ResultAuth.InProgress
+        viewModelScope.launch(Dispatchers.IO) {
+            delay(3000) // TODO: Remove.  Only here to demonstrate inprogress snackbar
+            try {
+                val success = authRepository.signIn(email, password)
+                _signInResult.value = ResultAuth.Success(success)
+            } catch (e: FirebaseAuthException) {
+                _signInResult.value = ResultAuth.Failure(e)
+            } finally {
+                // Reset the others since they are no longer applicable
+                _signUpResult.value = ResultAuth.Inactive
+                _signOutResult.value = ResultAuth.Inactive
+                _deleteAccountResult.value = ResultAuth.Inactive
+            }
         }
     }
 
     fun signOut(){
-        authRepository.signOut();
+        _signOutResult.value = ResultAuth.InProgress
+        try {
+            val success = authRepository.signOut()
+            _signOutResult.value = ResultAuth.Success(success)
+        } catch (e: FirebaseAuthException) {
+            _signOutResult.value = ResultAuth.Failure(e)
+        } finally {
+            // Reset the others since they are no longer applicable
+            _signInResult.value = ResultAuth.Inactive
+            _signUpResult.value = ResultAuth.Inactive
+            _deleteAccountResult.value = ResultAuth.Inactive
+        }
     }
 
     fun delete(){
-        viewModelScope.launch {
-            authRepository.delete();
+        _deleteAccountResult.value = ResultAuth.InProgress
+        viewModelScope.launch(Dispatchers.IO) {
+            delay(3000) // TODO: Remove.  Only here to demonstrate inprogress snackbar
+            try {
+                val success = authRepository.delete()
+                _deleteAccountResult.value = ResultAuth.Success(success)
+            } catch (e: FirebaseAuthException) {
+                _deleteAccountResult.value = ResultAuth.Failure(e)
+            } finally {
+                // Reset the others since they are no longer applicable
+                _signInResult.value = ResultAuth.Inactive
+                _signUpResult.value = ResultAuth.Inactive
+                _signOutResult.value = ResultAuth.Inactive
+            }
         }
     }
 }
