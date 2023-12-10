@@ -45,6 +45,88 @@ fun AuthLoginScreen(
                         )
 ) {
     val userState = authViewModel.currentUser().collectAsState()
+
+    // Auth Results variables
+    val signUpResult by authViewModel.signUpResult.collectAsState(ResultAuth.Inactive)
+    val signInResult by authViewModel.signInResult.collectAsState(ResultAuth.Inactive)
+    val signOutResult by authViewModel.signOutResult.collectAsState(ResultAuth.Inactive)
+    val deleteAccountResult by authViewModel.deleteAccountResult.collectAsState(ResultAuth.Inactive)
+
+    val snackbarHostState = remember { SnackbarHostState() } // Material 3 approach
+    
+    // Show a Snackbar when sign-up is successful, etc.
+    LaunchedEffect(signUpResult) {
+        signUpResult?.let {
+            if (it is ResultAuth.Inactive) {
+                return@LaunchedEffect
+            }
+            if (it is ResultAuth.InProgress) {
+                snackbarHostState.showSnackbar("Sign-up In Progress")
+                return@LaunchedEffect
+            }
+            if (it is ResultAuth.Success && it.data) {
+                snackbarHostState.showSnackbar("Sign-up Successful")
+            } else if (it is ResultAuth.Failure || it is ResultAuth.Success) { // success(false) case
+                snackbarHostState.showSnackbar("Sign-up Unsuccessful")
+            }
+        }
+    }
+
+    // Show a Snackbar when sign-in is successful
+    LaunchedEffect(signInResult) {
+        signInResult?.let {
+            if (it is ResultAuth.Inactive) {
+                return@LaunchedEffect
+            }
+            if (it is ResultAuth.InProgress) {
+                snackbarHostState.showSnackbar("Sign-in In Progress")
+                return@LaunchedEffect
+            }
+            if (it is ResultAuth.Success && it.data) {
+                snackbarHostState.showSnackbar("Sign-in Successful")
+            } else if (it is ResultAuth.Failure || it is ResultAuth.Success) { // success(false) case) {
+                snackbarHostState.showSnackbar("Sign-in Unsuccessful")
+            }
+        }
+    }
+
+    // Show a Snackbar when sign-out is successful
+    LaunchedEffect(signOutResult) {
+        signOutResult?.let {
+            if (it is ResultAuth.Inactive) {
+                return@LaunchedEffect
+            }
+            if (it is ResultAuth.InProgress) {
+                snackbarHostState.showSnackbar("Sign-out In Progress")
+                return@LaunchedEffect
+            }
+            if (it is ResultAuth.Success && it.data) {
+                snackbarHostState.showSnackbar("Sign-out Successful")
+            } else if (it is ResultAuth.Failure || it is ResultAuth.Success) { // success(false) case) {
+                snackbarHostState.showSnackbar("Sign-out Unsuccessful")
+            }
+        }
+    }
+
+
+    // Show a Snackbar when account deletion is successful
+    LaunchedEffect(deleteAccountResult) {
+        deleteAccountResult?.let {
+            if (it is ResultAuth.Inactive) {
+                return@LaunchedEffect
+            }
+            if (it is ResultAuth.InProgress) {
+                snackbarHostState.showSnackbar("Deletion In Progress")
+                return@LaunchedEffect
+            }
+            if (it is ResultAuth.Success && it.data) {
+                snackbarHostState.showSnackbar("Account Deleted")
+            } else if (it is ResultAuth.Failure || it is ResultAuth.Success) { // success(false) case)  {
+                snackbarHostState.showSnackbar("Deletion failed")
+            }
+        }
+    }
+
     //Login Values
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
