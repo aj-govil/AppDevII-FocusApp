@@ -43,6 +43,8 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.FocusApp.viewmodels.ProfileFactory
+import com.example.FocusApp.viewmodels.ProfileViewModel
 import com.google.android.gms.tasks.Task
 
 /**
@@ -91,6 +93,7 @@ class MainActivity : ComponentActivity() {
 fun FocusApp(
     taskListViewModel: TaskListViewModel = TaskListViewModel(),
     accountInformationViewModel: AccountInformationViewModel = AccountInformationViewModel(),
+    profileViewModel: ProfileViewModel = viewModel(factory= ProfileFactory()),
     authViewModel: AuthViewModel = viewModel(factory= AuthViewModelFactory())
 
     ) {
@@ -133,6 +136,7 @@ fun FocusApp(
             navController = navController,
             taskListViewModel = taskListViewModel,
             accountInformationViewModel = accountInformationViewModel,
+            profileViewModel = profileViewModel,
             authViewModel = authViewModel,
             startDestination = startDestination,
             modifier = Modifier.padding(innerPadding)
@@ -148,6 +152,7 @@ fun FocusNavHost(
     navController: NavHostController,
     taskListViewModel: TaskListViewModel, // pass in viewmodel again
     accountInformationViewModel: AccountInformationViewModel,
+    profileViewModel: ProfileViewModel,
     authViewModel: AuthViewModel = viewModel(factory= AuthViewModelFactory()),
     startDestination: String = Login.route,
     modifier: Modifier
@@ -168,6 +173,7 @@ fun FocusNavHost(
             ViewTasksScreen(
                 taskListViewModel = taskListViewModel,
                 accountInformationViewModel = accountInformationViewModel,
+                profileViewModel = profileViewModel,
                 navController = navController
             )
         }
