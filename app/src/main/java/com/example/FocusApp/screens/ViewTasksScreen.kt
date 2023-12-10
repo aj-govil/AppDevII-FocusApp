@@ -31,6 +31,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -68,13 +69,16 @@ fun ViewTasksScreen(
 
     var expanded by rememberSaveable { mutableStateOf(false) }
 
+    // state of profile view model
+    val myUiState by profileViewModel.uiState.collectAsState()
+
     Column (
         modifier = Modifier
-        .fillMaxSize()
-        .semantics(mergeDescendants = true,)
-        {
-            contentDescription = "Main Screen"
-        }) {
+            .fillMaxSize()
+            .semantics(mergeDescendants = true,)
+            {
+                contentDescription = "Main Screen"
+            }) {
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
@@ -177,8 +181,11 @@ fun ViewTasksScreen(
 
                         TextField(
                             value = accountInformationViewModel.firstName.value,
-                            onValueChange = { accountInformationViewModel.firstName.value = it },
-                            placeholder = { Text("Enter first name") },
+                            onValueChange = {
+                                            accountInformationViewModel.firstName.value = it
+                                            // set name in UI state
+                                            myUiState.name = it.text},
+                            placeholder = { Text(myUiState.name) },
                             modifier = Modifier
                                 .fillMaxWidth(0.8f)
                                 .padding(5.dp)
@@ -252,13 +259,17 @@ fun ViewTasksScreen(
                     }
 
                     Button(
-                        onClick = { expanded = false },
+                        onClick = {
+                            expanded = false
+                            // Set Profile info in datastore
+                            profileViewModel.setName(myUiState.name)
+                                  },
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(25.dp)
                             .height(48.dp)
                             .semantics(mergeDescendants = true) {
-                            contentDescription = "Save and Close Button"
+                                contentDescription = "Save and Close Button"
                             },
                         colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.inverseSurface)
                     ) {
