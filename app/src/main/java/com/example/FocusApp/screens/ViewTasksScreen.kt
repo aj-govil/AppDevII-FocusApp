@@ -1,5 +1,7 @@
 package com.example.FocusApp.screens
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -48,6 +50,8 @@ import com.example.FocusApp.data.Task
 import com.example.FocusApp.viewmodels.AccountInformationViewModel
 import com.example.FocusApp.viewmodels.ProfileViewModel
 import com.example.FocusApp.viewmodels.TaskListViewModel
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 
 /**
@@ -59,7 +63,9 @@ fun ViewTasksScreen(
     taskListViewModel: TaskListViewModel,
     accountInformationViewModel: AccountInformationViewModel,
     profileViewModel: ProfileViewModel,
-    navController: NavController
+    navController: NavController,
+    db: FirebaseFirestore,
+    auth: FirebaseAuth
 ) {
 
     var expanded by rememberSaveable { mutableStateOf(false) }
@@ -67,6 +73,34 @@ fun ViewTasksScreen(
     // state of profile view model
     val myUiState by profileViewModel.uiState.collectAsState()
 
+    // The fllowing logic should be added in a viewmodel for firestore
+    // Get current User UID
+    val currentUser = auth.currentUser
+    val userId = currentUser?.uid
+
+    db.collection("Tasks").whereEqualTo("userId", userId)
+        .get()
+        .addOnSuccessListener { result ->
+            // Every fetch, clear viewmodel
+            taskListViewModel.taskList.clear()
+
+            for (document in result) {
+                Log.d(TAG, "${document.id} => ${document.data}")
+                // Manually fetch task data
+                val task = Task(
+                    userId = userId,
+                    title = document.getString("title") ?: "",
+                    description = document.getString("description") ?: "",
+                    dueTime = document.getString("dueTime") ?: "",
+                    isComplete = document.getBoolean("isComplete") ?: false
+                )
+                // add data to viewmodel
+                taskListViewModel.taskList.add(task)
+            }
+        }
+        .addOnFailureListener { exception ->
+            Log.w(TAG, "Error getting documents.", exception)
+        }
     Column (
         modifier = Modifier
             .fillMaxSize()

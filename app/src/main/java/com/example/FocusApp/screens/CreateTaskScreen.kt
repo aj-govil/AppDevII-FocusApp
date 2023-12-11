@@ -1,39 +1,24 @@
 package com.example.FocusApp.screens
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -45,15 +30,14 @@ import androidx.compose.ui.unit.em
 import com.example.FocusApp.data.Task
 import com.example.FocusApp.viewmodels.TaskListViewModel
 import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.navigation.NavController
 import com.example.FocusApp.Tasks
-import com.example.FocusApp.viewmodels.AccountInformationViewModel
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 
 /**
@@ -64,7 +48,13 @@ import com.example.FocusApp.viewmodels.AccountInformationViewModel
 @Composable
 fun CreateTaskScreen(
     taskListViewModel: TaskListViewModel,
-    navController: NavController) {
+    navController: NavController,
+    db: FirebaseFirestore,
+    auth: FirebaseAuth
+) {
+    // Get current User UID
+    val currentUser = auth.currentUser
+    val uid = currentUser?.uid
 
     Column(
         modifier = Modifier
@@ -168,10 +158,21 @@ fun CreateTaskScreen(
                 val newDescription = taskListViewModel.description.value.text
                 val newTime = taskListViewModel.dueTime.value.text
                 if (newTitle.isNotBlank() && newDescription.isNotBlank() && isValidTime(newTime)) {
-                    taskListViewModel.taskList.add(Task(newTitle, newDescription, newTime, false))
+                    // do not add to tasks to viewmodel, will cause duplicates in TaskViewScreen
+                   // taskListViewModel.taskList.add(Task(newTitle, newDescription, newTime, false))
                     taskListViewModel.title.value = TextFieldValue("")
                     taskListViewModel.description.value = TextFieldValue("")
                     taskListViewModel.dueTime.value = TextFieldValue("")
+                    // Add valid task to FireStore -- use UID of logged in user to link task created to the account in use
+                    val taskWithUserID = Task(uid, newTitle, newDescription, newTime, false)
+                    db.collection("Tasks")
+                        .add(taskWithUserID)
+                        .addOnSuccessListener { documentReference ->
+                            Log.d(TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
+                        }
+                        .addOnFailureListener { e ->
+                            Log.w(TAG, "Error adding document", e)
+                        }
                 }
             },
             enabled = taskListViewModel.title.value.text.isNotBlank() && taskListViewModel.description.value.text.isNotBlank() && taskListViewModel.dueTime.value.text.isNotBlank(),
