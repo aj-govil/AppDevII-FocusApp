@@ -51,6 +51,7 @@ import com.example.FocusApp.viewmodels.AccountInformationViewModel
 import com.example.FocusApp.viewmodels.ProfileViewModel
 import com.example.FocusApp.viewmodels.TaskListViewModel
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.toObject
 
 
 /**
@@ -71,20 +72,28 @@ fun ViewTasksScreen(
     // state of profile view model
     val myUiState by profileViewModel.uiState.collectAsState()
 
-    val collection = db.collection("Tasks")
+    db.collection("Tasks")
         .get()
         .addOnSuccessListener { result ->
+            // Every fetch, clear viewmodel
+            taskListViewModel.taskList.clear()
+
             for (document in result) {
                 Log.d(TAG, "${document.id} => ${document.data}")
+                // Manually fetch task data
+                val task = Task(
+                    title = document.getString("title") ?: "",
+                    description = document.getString("description") ?: "",
+                    dueTime = document.getString("dueTime") ?: "",
+                    isComplete = document.getBoolean("isComplete") ?: false
+                )
+                // add data to viewmodel
+                taskListViewModel.taskList.add(task)
             }
         }
         .addOnFailureListener { exception ->
             Log.w(TAG, "Error getting documents.", exception)
         }
-    val tasksIncomplete = db.collection("Tasks").whereEqualTo("completed", false)
-    //Text(text = collection.toString())
-    Text(text = tasksIncomplete.toString())
-
     Column (
         modifier = Modifier
             .fillMaxSize()
