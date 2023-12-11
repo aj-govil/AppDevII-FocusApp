@@ -15,10 +15,4 @@ class TaskListViewModel : ViewModel() {
     val isComplete = mutableStateOf(false)
     val taskList = mutableStateListOf<Task>()
 
-    // temporarily keeping this here so stuff does not break
-//    val firstName = mutableStateOf(TextFieldValue())
-//    val lastName = mutableStateOf(TextFieldValue())
-//    var age = mutableStateOf(TextFieldValue())
-//    val email = mutableStateOf(TextFieldValue())
-
 }
