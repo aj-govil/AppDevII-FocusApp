@@ -174,7 +174,7 @@ fun CreateTaskScreen(
                 val newDescription = taskListViewModel.description.value.text
                 val newTime = taskListViewModel.dueTime.value.text
                 if (newTitle.isNotBlank() && newDescription.isNotBlank() && isValidTime(newTime)) {
-                    taskListViewModel.taskList.add(Task(newTitle, newDescription, newTime, false))
+                   // taskListViewModel.taskList.add(Task(newTitle, newDescription, newTime, false))
                     taskListViewModel.title.value = TextFieldValue("")
                     taskListViewModel.description.value = TextFieldValue("")
                     taskListViewModel.dueTime.value = TextFieldValue("")
