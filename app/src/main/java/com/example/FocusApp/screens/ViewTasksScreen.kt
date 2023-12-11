@@ -50,8 +50,8 @@ import com.example.FocusApp.data.Task
 import com.example.FocusApp.viewmodels.AccountInformationViewModel
 import com.example.FocusApp.viewmodels.ProfileViewModel
 import com.example.FocusApp.viewmodels.TaskListViewModel
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.toObject
 
 
 /**
@@ -64,7 +64,8 @@ fun ViewTasksScreen(
     accountInformationViewModel: AccountInformationViewModel,
     profileViewModel: ProfileViewModel,
     navController: NavController,
-    db: FirebaseFirestore
+    db: FirebaseFirestore,
+    auth: FirebaseAuth
 ) {
 
     var expanded by rememberSaveable { mutableStateOf(false) }
@@ -72,7 +73,12 @@ fun ViewTasksScreen(
     // state of profile view model
     val myUiState by profileViewModel.uiState.collectAsState()
 
-    db.collection("Tasks")
+    // The fllowing logic should be added in a viewmodel for firestore
+    // Get current User UID
+    val currentUser = auth.currentUser
+    val userId = currentUser?.uid
+
+    db.collection("Tasks").whereEqualTo("userId", userId)
         .get()
         .addOnSuccessListener { result ->
             // Every fetch, clear viewmodel
@@ -82,6 +88,7 @@ fun ViewTasksScreen(
                 Log.d(TAG, "${document.id} => ${document.data}")
                 // Manually fetch task data
                 val task = Task(
+                    userId = userId,
                     title = document.getString("title") ?: "",
                     description = document.getString("description") ?: "",
                     dueTime = document.getString("dueTime") ?: "",
