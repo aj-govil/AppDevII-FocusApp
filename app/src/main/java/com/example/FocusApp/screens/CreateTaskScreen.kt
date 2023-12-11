@@ -3,39 +3,22 @@ package com.example.FocusApp.screens
 import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -47,16 +30,13 @@ import androidx.compose.ui.unit.em
 import com.example.FocusApp.data.Task
 import com.example.FocusApp.viewmodels.TaskListViewModel
 import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.navigation.NavController
 import com.example.FocusApp.Tasks
-import com.example.FocusApp.viewmodels.AccountInformationViewModel
-import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
 
@@ -69,8 +49,12 @@ import com.google.firebase.firestore.FirebaseFirestore
 fun CreateTaskScreen(
     taskListViewModel: TaskListViewModel,
     navController: NavController,
-    db: FirebaseFirestore
+    db: FirebaseFirestore,
+    auth: FirebaseAuth
 ) {
+    // Get current User UID
+    val currentUser = auth.currentUser
+    val uid = currentUser?.uid
 
     Column(
         modifier = Modifier
@@ -179,9 +163,9 @@ fun CreateTaskScreen(
                     taskListViewModel.description.value = TextFieldValue("")
                     taskListViewModel.dueTime.value = TextFieldValue("")
                     // Add valid task to FireStore
-                    val task = Task(newTitle, newDescription, newTime, false)
+                    val taskWithUserID = Task(uid, newTitle, newDescription, newTime, false)
                     db.collection("Tasks")
-                        .add(task)
+                        .add(taskWithUserID)
                         .addOnSuccessListener { documentReference ->
                             Log.d(TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
                         }
