@@ -59,7 +59,8 @@ class MainActivity : ComponentActivity() {
         val accountInformationViewModel = ViewModelProvider(this).get(AccountInformationViewModel::class.java)
 
         FirebaseApp.initializeApp(this)
-        val db = Firebase.firestore
+        val db = Firebase.firestore // instance of Firebase's Firestore
+        val auth = FirebaseAuth.getInstance() // instance of Firebase Authentication
 
         setContent {
             FocusAppTheme {
@@ -78,7 +79,8 @@ class MainActivity : ComponentActivity() {
                         FocusApp(
                             taskListViewModel,
                             accountInformationViewModel,
-                            db = db)
+                            db = db,
+                            auth = auth)
                     }
                 }
             }
@@ -97,7 +99,8 @@ fun FocusApp(
     accountInformationViewModel: AccountInformationViewModel = AccountInformationViewModel(),
     profileViewModel: ProfileViewModel = viewModel(factory= ProfileFactory()), // First instantiation of profileViewModel
     authViewModel: AuthViewModel = viewModel(factory= AuthViewModelFactory()), // First instantiation of authViewModel
-    db: FirebaseFirestore
+    db: FirebaseFirestore,
+    auth: FirebaseAuth
 
     ) {
     val userState = authViewModel.currentUser().collectAsState() // check to see if user loggedin is saved here
@@ -144,6 +147,7 @@ fun FocusApp(
             authViewModel = authViewModel,
             startDestination = startDestination,
             db = db,
+            auth = auth,
             modifier = Modifier.padding(innerPadding)
         )
     }
@@ -160,6 +164,7 @@ fun FocusNavHost(
     profileViewModel: ProfileViewModel,
     authViewModel: AuthViewModel = viewModel(factory= AuthViewModelFactory()),
     db : FirebaseFirestore,
+    auth: FirebaseAuth,
     startDestination: String = Login.route,
     modifier: Modifier
 ){
@@ -181,7 +186,8 @@ fun FocusNavHost(
                 accountInformationViewModel = accountInformationViewModel,
                 profileViewModel = profileViewModel,
                 navController = navController,
-                db = db
+                db = db,
+                auth = auth,
             )
         }
 
@@ -189,7 +195,8 @@ fun FocusNavHost(
             CreateTaskScreen(
                 taskListViewModel = taskListViewModel,
                 navController = navController,
-                db = db
+                db = db,
+                auth = auth,
             )
         }
 
