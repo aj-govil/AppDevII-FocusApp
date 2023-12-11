@@ -6,7 +6,7 @@ import com.example.FocusApp.data.Task
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.Flow
 
-class taskRepositoryFirestore(val db: FirebaseFirestore): TaskRepository {
+class TaskRepositoryFirestore(val db: FirebaseFirestore): TaskRepository {
 
     // get database
     val dbTasks = db.collection("Tasks")
