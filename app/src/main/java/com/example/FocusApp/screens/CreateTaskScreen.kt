@@ -158,11 +158,12 @@ fun CreateTaskScreen(
                 val newDescription = taskListViewModel.description.value.text
                 val newTime = taskListViewModel.dueTime.value.text
                 if (newTitle.isNotBlank() && newDescription.isNotBlank() && isValidTime(newTime)) {
+                    // do not add to tasks to viewmodel, will cause duplicates in TaskViewScreen
                    // taskListViewModel.taskList.add(Task(newTitle, newDescription, newTime, false))
                     taskListViewModel.title.value = TextFieldValue("")
                     taskListViewModel.description.value = TextFieldValue("")
                     taskListViewModel.dueTime.value = TextFieldValue("")
-                    // Add valid task to FireStore
+                    // Add valid task to FireStore -- use UID of logged in user to link task created to the account in use
                     val taskWithUserID = Task(uid, newTitle, newDescription, newTime, false)
                     db.collection("Tasks")
                         .add(taskWithUserID)
