@@ -24,10 +24,6 @@ class taskRepositoryFirestore(val db: FirebaseFirestore): TaskRepository {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getTask(name: String): Flow<Task> {
-        TODO("Not yet implemented")
-    }
-
     override suspend fun delete(task: Task) {
         TODO("Not yet implemented")
     }

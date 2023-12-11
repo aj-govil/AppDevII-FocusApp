@@ -8,7 +8,5 @@ interface TaskRepository {
     suspend fun getTasks(userId: String): Flow<List<Task>>
 
     // suspend fun getTasks(): Flow<List<Task>> // Do we need to get all tasks?
-    suspend fun getTask(name: String): Flow<Task>
-
     suspend fun delete(task: Task)
 }
