@@ -1,5 +1,7 @@
 package com.example.FocusApp.screens
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -68,6 +70,20 @@ fun ViewTasksScreen(
 
     // state of profile view model
     val myUiState by profileViewModel.uiState.collectAsState()
+
+    val collection = db.collection("Tasks")
+        .get()
+        .addOnSuccessListener { result ->
+            for (document in result) {
+                Log.d(TAG, "${document.id} => ${document.data}")
+            }
+        }
+        .addOnFailureListener { exception ->
+            Log.w(TAG, "Error getting documents.", exception)
+        }
+    val tasksIncomplete = db.collection("Tasks").whereEqualTo("completed", false)
+    //Text(text = collection.toString())
+    Text(text = tasksIncomplete.toString())
 
     Column (
         modifier = Modifier
