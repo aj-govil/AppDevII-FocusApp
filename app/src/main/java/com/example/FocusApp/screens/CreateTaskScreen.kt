@@ -1,5 +1,7 @@
 package com.example.FocusApp.screens
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -176,6 +178,16 @@ fun CreateTaskScreen(
                     taskListViewModel.title.value = TextFieldValue("")
                     taskListViewModel.description.value = TextFieldValue("")
                     taskListViewModel.dueTime.value = TextFieldValue("")
+                    // Add valid task to FireStore
+                    val task = Task(newTitle, newDescription, newTime, false)
+                    db.collection("Tasks")
+                        .add(task)
+                        .addOnSuccessListener { documentReference ->
+                            Log.d(TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
+                        }
+                        .addOnFailureListener { e ->
+                            Log.w(TAG, "Error adding document", e)
+                        }
                 }
             },
             enabled = taskListViewModel.title.value.text.isNotBlank() && taskListViewModel.description.value.text.isNotBlank() && taskListViewModel.dueTime.value.text.isNotBlank(),
