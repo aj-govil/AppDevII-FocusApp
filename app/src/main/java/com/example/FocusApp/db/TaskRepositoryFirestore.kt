@@ -21,10 +21,45 @@ class TaskRepositoryFirestore(val db: FirebaseFirestore): TaskRepository {
     }
 
     override suspend fun getTasks(userId: String): Flow<List<Task>> {
+//        val subscription = dbTasks
+//            .whereEqualTo("userId", userId)
+//            .addSnapshotListener { snapshot, error ->
+//                if (error != null) {
+//                    println("Listen failed: $error")
+//                    return@addSnapshotListener
+//                }
+//                // if tasks exist
+//                if (snapshot != null) {
+//                    var tasks: MutableList<Task> = mutableListOf()
+//                    for (document in snapshot.documents) {
+//
+//                        val task = convertSnapshotToTask(document)
+//                        tasks.add(task)
+//                    }
+//                    if(tasks != null){
+//                        trySend(tasks)
+//                    }
+//                }
+//            }
         TODO("Not yet implemented")
     }
 
     override suspend fun delete(task: Task) {
         TODO("Not yet implemented")
     }
+}
+
+fun convertSnapshotToTask(document: DocumentSnapshot): Task{
+
+    val taskList = mutableListOf<Task>()
+
+    val task = Task(
+        userId = document.getString("userId")?:"",
+        title = document.getString("title") ?: "",
+        description = document.getString("description") ?: "",
+        dueTime = document.getString("dueTime") ?: "",
+        isComplete = document.getBoolean("isComplete") ?: false
+    )
+
+    return task
 }
