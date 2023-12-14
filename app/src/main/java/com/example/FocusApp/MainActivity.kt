@@ -12,18 +12,22 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.FocusApp.auth.AuthViewModel
+import com.example.FocusApp.auth.AuthViewModelFactory
 import com.example.FocusApp.screens.AuthLoginScreen
 import com.example.FocusApp.screens.LandingScreen
 import com.example.FocusApp.screens.CreateTaskScreen
@@ -38,6 +42,12 @@ import com.example.FocusApp.viewmodels.TaskListViewModel
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.FocusApp.viewmodels.ProfileFactory
+import com.example.FocusApp.viewmodels.ProfileViewModel
+import com.google.android.gms.tasks.Task
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.firestore
 
 /**
  * Main Activity containing a favorite song list application.
@@ -47,10 +57,11 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         val taskListViewModel = ViewModelProvider(this).get(TaskListViewModel::class.java)
         val accountInformationViewModel = ViewModelProvider(this).get(AccountInformationViewModel::class.java)
-//        lateinit var auth: FirebaseAuth
-//
-//        auth = Firebase.auth
+
         FirebaseApp.initializeApp(this)
+        val db = Firebase.firestore // instance of Firebase's Firestore
+        val auth = FirebaseAuth.getInstance() // instance of Firebase Authentication
+
         setContent {
             FocusAppTheme {
                 Surface(
@@ -67,7 +78,9 @@ class MainActivity : ComponentActivity() {
                     else {
                         FocusApp(
                             taskListViewModel,
-                            accountInformationViewModel)
+                            accountInformationViewModel,
+                            db = db,
+                            auth = auth)
                     }
                 }
             }
@@ -83,9 +96,24 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun FocusApp(
     taskListViewModel: TaskListViewModel = TaskListViewModel(),
-    accountInformationViewModel: AccountInformationViewModel = AccountInformationViewModel()
+    accountInformationViewModel: AccountInformationViewModel = AccountInformationViewModel(),
+    profileViewModel: ProfileViewModel = viewModel(factory= ProfileFactory()), // First instantiation of profileViewModel
+    authViewModel: AuthViewModel = viewModel(factory= AuthViewModelFactory()), // First instantiation of authViewModel
+    db: FirebaseFirestore,
+    auth: FirebaseAuth
 
     ) {
+    val userState = authViewModel.currentUser().collectAsState() // check to see if user loggedin is saved here
+
+    // Navigation variables
+    var startDestination = Login.route // Default start is login screen
+    var hideTabs = true; // Default gate access to Tabs
+
+    // If user is already logged in, set it to My Tasks
+    if (userState.value != null){
+        startDestination = Tasks.route
+        hideTabs = false
+    }
 
     // Navigation Setup
     // ----------------
@@ -100,18 +128,26 @@ fun FocusApp(
     // Application Setup
     // ------------------
     Scaffold (
-        topBar = {
-                FocusTabRow(allScreens = focusTabRowScreens,
-                    onTabSelected = { newScreen -> navController.navigateSingleTopTo(newScreen.route)} ,
-                    currentScreen = currentScreen
-                )
-        }
+            topBar = {
+                if(!hideTabs){
+                    FocusTabRow(allScreens = focusTabRowScreens,
+                        onTabSelected = { newScreen -> navController.navigateSingleTopTo(newScreen.route)} ,
+                        currentScreen = currentScreen
+                    )
+                }
+            }
+
     )
     { innerPadding ->
         FocusNavHost(
             navController = navController,
             taskListViewModel = taskListViewModel,
             accountInformationViewModel = accountInformationViewModel,
+            profileViewModel = profileViewModel,
+            authViewModel = authViewModel,
+            startDestination = startDestination,
+            db = db,
+            auth = auth,
             modifier = Modifier.padding(innerPadding)
         )
     }
@@ -125,12 +161,17 @@ fun FocusNavHost(
     navController: NavHostController,
     taskListViewModel: TaskListViewModel, // pass in viewmodel again
     accountInformationViewModel: AccountInformationViewModel,
+    profileViewModel: ProfileViewModel,
+    authViewModel: AuthViewModel = viewModel(factory= AuthViewModelFactory()),
+    db : FirebaseFirestore,
+    auth: FirebaseAuth,
+    startDestination: String = Login.route,
     modifier: Modifier
 ){
     // Navigation controlled through NavHost
     NavHost(
         navController = navController,
-        startDestination = Login.route,
+        startDestination = startDestination,
         modifier = modifier
     ) {
 
@@ -140,29 +181,29 @@ fun FocusNavHost(
             StatsScreen()
         }
         composable(route = Tasks.route) {
-            CreateTaskScreen(
-                taskListViewModel = taskListViewModel,
-                navController = navController)
-        }
-
-        composable(route = Generators.route){
             ViewTasksScreen(
                 taskListViewModel = taskListViewModel,
                 accountInformationViewModel = accountInformationViewModel,
-                navController = navController
+                profileViewModel = profileViewModel,
+                navController = navController,
+                db = db,
+                auth = auth,
+            )
+        }
+
+        composable(route = Generators.route){
+            CreateTaskScreen(
+                taskListViewModel = taskListViewModel,
+                navController = navController,
+                db = db,
+                auth = auth,
             )
         }
 
         composable(route = Login.route){
-            AuthLoginScreen(navController = navController)
-        }
-
-        composable(route = Login.route){
-            AuthLoginScreen(navController = navController)
-        }
-
-        composable(route = Login.route){
-            AuthLoginScreen(navController = navController)
+            AuthLoginScreen(
+                navController = navController,
+                authViewModel = authViewModel)
         }
     }
 }

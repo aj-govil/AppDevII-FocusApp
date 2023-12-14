@@ -55,8 +55,13 @@ android {
 dependencies {
 
     // Advanced state dependencies
-//    val lifecycle_version = "2.6.2"
-//    implementation("androidx.lifecycle:lifecycle-runtime-compose:$lifecycle_version")
+    // val lifecycle_version = "2.6.2"
+    // implementation("androidx.lifecycle:lifecycle-runtime-compose:$lifecycle_version")
+
+
+
+
+
 
     implementation("com.google.ar.sceneform:filament-android:1.17.1")
     implementation("androidx.datastore:datastore-preferences:1.0.0")
@@ -80,10 +85,13 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
-    // Import the Firebase BoM
-    implementation(platform("com.google.firebase:firebase-bom:32.6.0"))
+    // Import the BoM for the Firebase platform
+    implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
     // FireBaseUI
     implementation("com.firebaseui:firebase-ui-auth:7.2.0")
+    // Declare the dependency for the Cloud Firestore library
+    // When using the BoM, you don't specify versions in Firebase library dependencies
+    implementation("com.google.firebase:firebase-firestore")
 
     // TODO: Add the dependencies for Firebase products you want to use
     // When using the BoM, don't specify versions in Firebase dependencies

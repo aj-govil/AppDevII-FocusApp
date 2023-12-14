@@ -13,8 +13,11 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -36,15 +39,99 @@ import androidx.navigation.NavController
 import com.example.FocusApp.Tasks
 import com.example.FocusApp.auth.AuthViewModel
 import com.example.FocusApp.auth.AuthViewModelFactory
+import com.example.FocusApp.auth.ResultAuth
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AuthLoginScreen(
     navController: NavController,
-    authViewModel: AuthViewModel = viewModel(factory= AuthViewModelFactory(),
-                        )
+    authViewModel: AuthViewModel = viewModel(factory= AuthViewModelFactory())
 ) {
+    // Viewmodel usages inspired by Talibs slides and KotlinWithCompose Repository
+    // View Model Variables
     val userState = authViewModel.currentUser().collectAsState()
+
+    // Auth Results variables
+    val signUpResult by authViewModel.signUpResult.collectAsState(ResultAuth.Inactive)
+    val signInResult by authViewModel.signInResult.collectAsState(ResultAuth.Inactive)
+    val signOutResult by authViewModel.signOutResult.collectAsState(ResultAuth.Inactive)
+    val deleteAccountResult by authViewModel.deleteAccountResult.collectAsState(ResultAuth.Inactive)
+
+    val snackbarHostState = remember { SnackbarHostState() } // Material 3 approach
+    
+    // Show a Snackbar when sign-up is successful, etc.
+    LaunchedEffect(signUpResult) {
+        signUpResult?.let {
+            if (it is ResultAuth.Inactive) {
+                return@LaunchedEffect
+            }
+            if (it is ResultAuth.InProgress) {
+                snackbarHostState.showSnackbar("Sign-up In Progress")
+                return@LaunchedEffect
+            }
+            if (it is ResultAuth.Success && it.data) {
+                snackbarHostState.showSnackbar("Sign-up Successful")
+            } else if (it is ResultAuth.Failure || it is ResultAuth.Success) { // success(false) case
+                snackbarHostState.showSnackbar("Sign-up Unsuccessful")
+            }
+        }
+    }
+
+    // Show a Snackbar when sign-in is successful
+    LaunchedEffect(signInResult) {
+        signInResult?.let {
+            if (it is ResultAuth.Inactive) {
+                return@LaunchedEffect
+            }
+            if (it is ResultAuth.InProgress) {
+                snackbarHostState.showSnackbar("Sign-in In Progress")
+                return@LaunchedEffect
+            }
+            if (it is ResultAuth.Success && it.data) {
+                snackbarHostState.showSnackbar("Sign-in Successful")
+            } else if (it is ResultAuth.Failure || it is ResultAuth.Success) { // success(false) case) {
+                snackbarHostState.showSnackbar("Sign-in Unsuccessful")
+            }
+        }
+    }
+
+    // Show a Snackbar when sign-out is successful
+    LaunchedEffect(signOutResult) {
+        signOutResult?.let {
+            if (it is ResultAuth.Inactive) {
+                return@LaunchedEffect
+            }
+            if (it is ResultAuth.InProgress) {
+                snackbarHostState.showSnackbar("Sign-out In Progress")
+                return@LaunchedEffect
+            }
+            if (it is ResultAuth.Success && it.data) {
+                snackbarHostState.showSnackbar("Sign-out Successful")
+            } else if (it is ResultAuth.Failure || it is ResultAuth.Success) { // success(false) case) {
+                snackbarHostState.showSnackbar("Sign-out Unsuccessful")
+            }
+        }
+    }
+
+
+    // Show a Snackbar when account deletion is successful
+    LaunchedEffect(deleteAccountResult) {
+        deleteAccountResult?.let {
+            if (it is ResultAuth.Inactive) {
+                return@LaunchedEffect
+            }
+            if (it is ResultAuth.InProgress) {
+                snackbarHostState.showSnackbar("Deletion In Progress")
+                return@LaunchedEffect
+            }
+            if (it is ResultAuth.Success && it.data) {
+                snackbarHostState.showSnackbar("Account Deleted")
+            } else if (it is ResultAuth.Failure || it is ResultAuth.Success) { // success(false) case)  {
+                snackbarHostState.showSnackbar("Deletion failed")
+            }
+        }
+    }
+
     //Login Values
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
@@ -87,26 +174,6 @@ fun AuthLoginScreen(
         }
     }
 
-    // Button onClick functions
-    // ------------------------
-
-    // note: this is repeating code however usually signups require more info, this would be able to deal with that
-    val signUpClick: () -> Unit = {
-        if ( /* !isEmailValid(email) || **/ !isPasswordValid(password)) {
-            // Validation failed, do not proceed with sign up
-        } else {
-            authViewModel.signUp(email, password)
-        }
-    }
-
-    val signInClick: () -> Unit = {
-        if (isEmailValid(email) || isPasswordValid(password)) {
-            // Validation failed, do not proceed with sign in
-        } else {
-            authViewModel.signIn(email, password)
-        }
-    }
-
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -119,6 +186,10 @@ fun AuthLoginScreen(
                 .padding(top = 32.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            SnackbarHost(
+                hostState = snackbarHostState,
+                modifier = Modifier.padding(16.dp)
+            )
             if (userState.value == null) {
                 // Title
                 Text(text = "Not logged in", modifier = Modifier.padding(bottom = 20.dp), fontWeight = FontWeight.SemiBold )
@@ -131,7 +202,7 @@ fun AuthLoginScreen(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ){
-                    
+
                     if (showEmailError) {
                         Text(
                             text = emailErrorMessage,
@@ -196,7 +267,7 @@ fun AuthLoginScreen(
                         authViewModel.signIn(email, password)
                     }
                     // TODO: Display error message is userState value is null (Signup didnt work)
-                    
+
                 }) {
                     Text("Sign in via email")
                 }
@@ -221,19 +292,6 @@ fun AuthLoginScreen(
                     authViewModel.delete()
                 }) {
                     Text("Delete account")
-                }
-
-                Button(onClick = {
-                    navController.navigate(Tasks.route) // TODO: Swap with focus destination to keep access to above?
-                                                        // Or setup popBackStack to return to Tasks -> must make this default, would have to add logic to redirect to login
-                },
-                    modifier = Modifier
-                        .padding(50.dp)
-                        .semantics(mergeDescendants = true) {
-                            contentDescription = "Enter Button"
-                        },
-                    ){
-                    Text("Enter App")
                 }
             }
         }
