@@ -35,7 +35,6 @@ import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -85,7 +84,7 @@ fun ViewTasksScreen(
     // state of profile view model
     val myUiState by profileViewModel.uiState.collectAsState()
 
-    // The fllowing logic should be added in a viewmodel for firestore
+    // The following logic should be added in a viewmodel for firestore
     // Get current User UID
     val currentUser = auth.currentUser
     val userId = currentUser?.uid
@@ -104,10 +103,15 @@ fun ViewTasksScreen(
                     title = document.getString("title") ?: "",
                     description = document.getString("description") ?: "",
                     dueTime = document.getString("dueTime") ?: "",
-                    isComplete = document.getBoolean("isComplete") ?: false
+                    isComplete = document.getBoolean("isComplete") ?: false,
+                    delete = document.getBoolean("delete") ?: false
                 )
+
                 // add data to viewmodel
-                taskListViewModel.taskList.add(task)
+                if(!checkDeleted(task, taskListViewModel))
+                {
+                    taskListViewModel.taskList.add(task)
+                }
             }
         }
         .addOnFailureListener { exception ->
@@ -144,7 +148,10 @@ fun ViewTasksScreen(
                     .weight(1f)
                     .padding(start = 4.dp, end = 4.dp)
                     .height(48.dp)
-                    .background(MaterialTheme.colorScheme.inversePrimary, shape = RoundedCornerShape(4.dp)),
+                    .background(
+                        MaterialTheme.colorScheme.inversePrimary,
+                        shape = RoundedCornerShape(4.dp)
+                    ),
                 singleLine = true,
                 cursorBrush = SolidColor(MaterialTheme.colorScheme.inversePrimary),
                 decorationBox = { innerTextField ->
@@ -194,11 +201,54 @@ fun ViewTasksScreen(
                     contentDescription = "Task List"
                 }
         ) {
-            val filteredTasks = getFilteredTasks(taskListViewModel.taskList, filterType)
+            //taskListViewModel.taskList = deleteMarkedTasks(taskListViewModel.taskList);
+            var filteredTasks = getFilteredTasks(taskListViewModel.taskList, filterType)
                 .sortedByDescending { it.title.contains(searchQuery, ignoreCase = true) }
 
+            filteredTasks = deleteMarkedTasks(filteredTasks);
+
             items(filteredTasks) { task ->
-                TaskItem(task)
+                TaskItem(task) {
+                    deleteTask(task, taskListViewModel)
+                    taskListViewModel.taskList.remove(task)
+                    val taskWithUserID = Task(userId, task.title, task.description, task.dueTime, false, true)
+                    db.collection("DeletedTasks")
+                        .add(taskWithUserID)
+                        .addOnSuccessListener { documentReference ->
+                            Log.d(TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
+                        }
+                        .addOnFailureListener { e ->
+                            Log.w(TAG, "Error adding document", e)
+                        }
+
+                    /*db.collection("Tasks").whereEqualTo("userId", userId)
+                        .get()
+                        .addOnSuccessListener { result ->
+                            for (document in result) {
+                                Log.d(TAG, "${document.id} => ${document.data}")
+                                // Manually fetch task data
+                                val theTask = Task(
+                                    userId = userId,
+                                    title = document.getString("title") ?: "",
+                                    description = document.getString("description") ?: "",
+                                    dueTime = document.getString("dueTime") ?: "",
+                                    isComplete = document.getBoolean("isComplete") ?: false,
+                                    delete = document.getBoolean("delete") ?: false
+                                )
+
+                                if(theTask.title.equals(task.title)) {
+                                    val documentReference = db.collection("Tasks").document(document.id)
+                                    documentReference.delete()
+                                        .addOnSuccessListener {
+                                            Log.d(TAG, "DocumentSnapshot successfully deleted!")
+                                        }
+                                        .addOnFailureListener { e ->
+                                            Log.w(TAG, "Error deleting document", e)
+                                        }
+                                }
+                            }
+                        }*/
+                }
             }
 
             item {
@@ -404,7 +454,7 @@ fun ViewTasksScreen(
  * A task that the user has entered.
  */
 @Composable
-fun TaskItem(task: Task) {
+fun TaskItem(task: Task, deleteClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -446,10 +496,33 @@ fun TaskItem(task: Task) {
                         color = MaterialTheme.colorScheme.inverseSurface
                     )
                 }
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(vertical = 4.dp)
+                ) {
+                    TaskDeleteButton(task, deleteClick);
+                }
             }
-
             TaskCheckBox(task)
         }
+    }
+}
+
+@Composable
+fun TaskDeleteButton(task: Task, triggerDeleteReload: () -> Unit) {
+    Button(
+        onClick = {
+            task.delete = true
+            triggerDeleteReload()
+        },
+        modifier = Modifier
+            .height(48.dp)
+            .semantics(mergeDescendants = true) {
+                contentDescription = "Delete Button"
+            },
+        colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
+    ) {
+        Text("Delete")
     }
 }
 
@@ -513,6 +586,20 @@ fun getFilteredTasks(tasks: List<Task>, filterType: FilterType): List<Task> {
         FilterType.COMPLETE -> tasks.filter { it.isComplete }
         FilterType.INCOMPLETE -> tasks.filterNot { it.isComplete }
     }
+}
+fun deleteTask(task: Task, tasks: TaskListViewModel) {
+    tasks.deletedTasks.add(task)
+}
+
+fun checkDeleted(task: Task, tasks: TaskListViewModel): Boolean {
+    if(tasks.deletedTasks.any { it.title == task.title })
+    {
+        return tasks.deletedTasks.any { it.dueTime == task.dueTime }
+    }
+    return false
+}
+fun deleteMarkedTasks(tasks: List<Task>): List<Task> {
+    return tasks.filterNot { it.delete }
 }
 
 

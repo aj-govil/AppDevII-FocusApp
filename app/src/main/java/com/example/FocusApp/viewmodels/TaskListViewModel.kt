@@ -13,6 +13,6 @@ class TaskListViewModel : ViewModel() {
     val description = mutableStateOf(TextFieldValue())
     val dueTime = mutableStateOf(TextFieldValue())
     val isComplete = mutableStateOf(false)
-    val taskList = mutableStateListOf<Task>()
-
+    var taskList = mutableStateListOf<Task>()
+    var deletedTasks = mutableStateListOf<Task>()
 }

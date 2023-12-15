@@ -62,7 +62,8 @@ fun convertSnapshotToTask(document: DocumentSnapshot): Task{
         title = document.getString("title") ?: "",
         description = document.getString("description") ?: "",
         dueTime = document.getString("dueTime") ?: "",
-        isComplete = document.getBoolean("isComplete") ?: false
+        isComplete = document.getBoolean("isComplete") ?: false,
+        delete = false
     )
 
     return task

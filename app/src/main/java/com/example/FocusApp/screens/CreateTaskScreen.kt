@@ -164,7 +164,7 @@ fun CreateTaskScreen(
                     taskListViewModel.description.value = TextFieldValue("")
                     taskListViewModel.dueTime.value = TextFieldValue("")
                     // Add valid task to FireStore -- use UID of logged in user to link task created to the account in use
-                    val taskWithUserID = Task(uid, newTitle, newDescription, newTime, false)
+                    val taskWithUserID = Task(uid, newTitle, newDescription, newTime, false, false)
                     db.collection("Tasks")
                         .add(taskWithUserID)
                         .addOnSuccessListener { documentReference ->
