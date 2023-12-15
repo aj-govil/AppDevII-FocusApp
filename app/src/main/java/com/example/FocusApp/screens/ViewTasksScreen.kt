@@ -17,10 +17,12 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -29,9 +31,11 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -41,10 +45,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.FocusApp.Generators
 import com.example.FocusApp.data.Task
@@ -71,6 +80,7 @@ fun ViewTasksScreen(
 
     var expanded by rememberSaveable { mutableStateOf(false) }
     var filterType by rememberSaveable { mutableStateOf(FilterType.ALL) }
+    var searchQuery by rememberSaveable { mutableStateOf("") }
 
     // state of profile view model
     val myUiState by profileViewModel.uiState.collectAsState()
@@ -111,6 +121,54 @@ fun ViewTasksScreen(
                 contentDescription = "Main Screen"
             })
     {
+        // Search bar row
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
+                .semantics(mergeDescendants = true) {
+                    contentDescription = "Search Bar Row"
+                }
+        ) {
+
+            BasicTextField(
+                value = searchQuery,
+                onValueChange = { searchQuery = it },
+                textStyle = LocalTextStyle.current.copy(
+                    color = MaterialTheme.colorScheme.onSurface,
+                    fontSize = 18.sp,
+                    textAlign = TextAlign.Left,
+                    fontFamily = FontFamily.Serif
+                ),
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(start = 4.dp, end = 4.dp)
+                    .height(48.dp)
+                    .background(MaterialTheme.colorScheme.inversePrimary, shape = RoundedCornerShape(4.dp)),
+                singleLine = true,
+                cursorBrush = SolidColor(MaterialTheme.colorScheme.inversePrimary),
+                decorationBox = { innerTextField ->
+                    Box(
+                        contentAlignment = Alignment.CenterStart,
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        if (searchQuery.isEmpty()) {
+                            // Show the search icon as a placeholder if the text is empty
+                            Icon(
+                                imageVector = Icons.Default.Search,
+                                contentDescription = null,
+                                tint = Color.White,
+                                modifier = Modifier.padding(start = 8.dp, end = 8.dp)
+                            )
+                        }
+                        innerTextField()
+                    }
+                }
+            )
+        }
+
+
+        // Filter Buttons Row
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -124,6 +182,7 @@ fun ViewTasksScreen(
             FilterButton("Complete ") { filterType = FilterType.COMPLETE }
             Spacer(modifier = Modifier.width(8.dp))
             FilterButton("Incomplete ") { filterType = FilterType.INCOMPLETE }
+
         }
 
 
@@ -135,7 +194,10 @@ fun ViewTasksScreen(
                     contentDescription = "Task List"
                 }
         ) {
-            items(getFilteredTasks(taskListViewModel.taskList, filterType)) { task ->
+            val filteredTasks = getFilteredTasks(taskListViewModel.taskList, filterType)
+                .sortedByDescending { it.title.contains(searchQuery, ignoreCase = true) }
+
+            items(filteredTasks) { task ->
                 TaskItem(task)
             }
 
@@ -364,13 +426,15 @@ fun TaskItem(task: Task) {
                 Text(
                     text = task.title,
                     style = MaterialTheme.typography.headlineMedium,
-                    color = MaterialTheme.colorScheme.inverseSurface
+                    color = MaterialTheme.colorScheme.inverseSurface,
+                    fontFamily = FontFamily.Serif
                 )
                 Text(
                     text = task.description,
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.inverseSurface,
-                    modifier = Modifier.padding(vertical = 4.dp)
+                    modifier = Modifier.padding(vertical = 4.dp),
+                    fontFamily = FontFamily.Serif
                 )
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
