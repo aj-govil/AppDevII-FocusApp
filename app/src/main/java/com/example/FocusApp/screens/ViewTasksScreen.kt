@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -69,6 +70,7 @@ fun ViewTasksScreen(
 ) {
 
     var expanded by rememberSaveable { mutableStateOf(false) }
+    var filterType by rememberSaveable { mutableStateOf(FilterType.ALL) }
 
     // state of profile view model
     val myUiState by profileViewModel.uiState.collectAsState()
@@ -107,7 +109,24 @@ fun ViewTasksScreen(
             .semantics(mergeDescendants = true,)
             {
                 contentDescription = "Main Screen"
-            }) {
+            })
+    {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
+                .semantics(mergeDescendants = true) {
+                    contentDescription = "Filter Buttons"
+                }
+        ) {
+            FilterButton("All") { filterType = FilterType.ALL }
+            Spacer(modifier = Modifier.width(8.dp))
+            FilterButton("Complete ") { filterType = FilterType.COMPLETE }
+            Spacer(modifier = Modifier.width(8.dp))
+            FilterButton("Incomplete ") { filterType = FilterType.INCOMPLETE }
+        }
+
+
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
@@ -116,7 +135,7 @@ fun ViewTasksScreen(
                     contentDescription = "Task List"
                 }
         ) {
-            items(taskListViewModel.taskList) { task ->
+            items(getFilteredTasks(taskListViewModel.taskList, filterType)) { task ->
                 TaskItem(task)
             }
 
@@ -365,25 +384,30 @@ fun TaskItem(task: Task) {
                 }
             }
 
-            TaskCheckBox(isChecked = task.isComplete)
+            TaskCheckBox(task)
         }
     }
 }
 
 @Composable
-fun TaskCheckBox(isChecked: Boolean) {
-    val checkedState = rememberSaveable { mutableStateOf(isChecked) }
+fun TaskCheckBox(task: Task) {
+    // Initialize checkedState based on the task's isComplete value
+    val checkedState = rememberSaveable { mutableStateOf(task.isComplete) }
 
     Box(
         modifier = Modifier
             .size(48.dp)
             .background(
-                color = if (checkedState.value) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surface,
+                color = if (checkedState.value && task.isComplete) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surface,
                 shape = RoundedCornerShape(4.dp)
             )
-            .clickable { checkedState.value = !checkedState.value }
+            .clickable {
+                checkedState.value = !checkedState.value
+                // Update the task's isComplete field
+                task.isComplete = checkedState.value
+            }
     ) {
-        if (checkedState.value) {
+        if (task.isComplete) {
             Icon(
                 imageVector = Icons.Default.Check,
                 contentDescription = null,
@@ -395,4 +419,37 @@ fun TaskCheckBox(isChecked: Boolean) {
         }
     }
 }
+
+
+
+enum class FilterType {
+    ALL,
+    COMPLETE,
+    INCOMPLETE
+}
+
+@Composable
+fun FilterButton(text: String, onClick: () -> Unit) {
+    Button(
+        onClick = onClick,
+        modifier = Modifier
+            .height(48.dp)
+            .semantics(mergeDescendants = true) {
+                contentDescription = "$text Button"
+            },
+        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.inversePrimary)
+    ) {
+        Text(text = text)
+    }
+}
+
+fun getFilteredTasks(tasks: List<Task>, filterType: FilterType): List<Task> {
+    return when (filterType) {
+        FilterType.ALL -> tasks
+        FilterType.COMPLETE -> tasks.filter { it.isComplete }
+        FilterType.INCOMPLETE -> tasks.filterNot { it.isComplete }
+    }
+}
+
+
 
