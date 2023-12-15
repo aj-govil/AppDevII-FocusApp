@@ -14,7 +14,7 @@ object Generators: FocusDestination {
 
 }
 object Stats: FocusDestination {
-    override val route = "stats"
+    override val route = "About Us"
 }
 
 object Tasks: FocusDestination {
