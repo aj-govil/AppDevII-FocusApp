@@ -1,12 +1,32 @@
 # FocusApp
 
 ## Goal
-This tasking application manages your tasks in a unique way to improve productivity.
+FocsusApp – Your Ultimate Task Management Solution on Android!
+
+FocsusApp is a cutting-edge Android application developed with Jetpack Compose, designed to streamline and enhance your task management experience. With FocsusApp, you can effortlessly create and organize tasks, ensuring you stay on top of your daily activities with unmatched efficiency.
 
 ## Quick-start
 Download the repository code and build project in Android Studio by pressing play.
 
-## Screenshots of application
+## Key Features
+
+- **Intuitive Task Creation:**  
+  Craft tasks seamlessly by providing a title, description, and specific time details. FocsusApp empowers you to articulate your tasks with precision.
+
+- **Organized Task Viewing:**  
+  Navigate through your tasks effortlessly on a dedicated page that categorizes them into three distinct sections; All, Complete, and Incomplete. This intuitive organization ensures you have a comprehensive overview of your tasks at all times.
+
+- **Smart Sorting Options:**  
+  Tailor your task-viewing experience with smart sorting options. Whether you want to focus on completed tasks or prioritize the ones still pending, FocsusApp allows you to customize your view for optimal task management.
+
+- **Efficient Search Functionality:**  
+  Locate specific tasks in seconds using the powerful search functionality. FocsusApp ensures that you can quickly find the task you need, saving you valuable time and effort.
+
+- **Seamless Task Deletion:**  
+  Simplify your task management process by easily deleting tasks you no longer need. FocsusApp provides a straightforward deletion feature to keep your task list clutter-free.
+
+
+## Application Screenshots
 
 <img width="200" height="450" alt="task-home" src="https://github.com/aj-govil/AppDevII-FocusApp/assets/98484980/49b898da-e17d-431a-ae7b-124b85213ca3">
 <img width="200" height="450" alt="create-task" src="https://github.com/aj-govil/AppDevII-FocusApp/assets/98484980/be275c24-6e60-42ca-8abc-35bfb90c3434">
