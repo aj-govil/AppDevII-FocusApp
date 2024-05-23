@@ -1,4 +1,4 @@
-# FocusApp
+# Focus App
 
 ## Goal
 FocsusApp – Your Ultimate Task Management Solution on Android!
